@@ -1,0 +1,63 @@
+.header {
+  display: flex;
+  align-items: center;
+  height: 50px;
+  border: 1px solid black;
+  justify-content: space-between;
+}
+
+.header .logo {
+  width: 50px;
+  margin-left: 20px;
+}
+
+.buttons {
+  display: flex;
+}
+
+.btn {
+  width: 150px;
+  height: 40px;
+  border-radius: 20px;
+  margin: 0 10px;
+  color: black;
+  border: none;
+  cursor: pointer;
+}
+
+.btn:hover {
+  opacity: 0.75;
+}
+
+.login-btn {
+  background: #00e3536c;
+}
+
+.log-out-btn {
+  background: #00e3536c;
+  display: none;
+}
+
+.sign-up-btn {
+  background: #00e353;
+}
+
+.night-mode {
+  background: transparent;
+  border: none;
+  margin-right: 20px;
+}
+
+.night-mode:hover {
+  cursor: pointer;
+}
+
+.night-mode img {
+  width: 25px;
+}
+
+@media (max-width: 450px) {
+  .btn {
+    width: 75px;
+  }
+}
