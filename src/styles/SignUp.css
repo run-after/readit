@@ -1,0 +1,33 @@
+.sign-up-form {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto auto;
+  padding: 20px 0;
+  flex-direction: column;
+  width: 50%;
+  height: 50%;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid black;
+  border-radius: 10px;
+  gap: 10px;
+  background: white;
+  display: none;
+}
+
+.sign-up-form .btn {
+  background: #00e354;
+}
+
+.sign-up-form input {
+  border: 1px solid #00e354;
+  border-radius: 10px;
+  height: 20px;
+}
+
+.sign-up-form p {
+  color: red;
+}
