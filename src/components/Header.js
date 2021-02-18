@@ -18,7 +18,7 @@ const Header = (props) => {
 
   const logOut = () => {
     firebase.auth().signOut().then(() => {
-      props.setLoggedIn(false);
+      props.setUser(null);
     });
   };
   
@@ -29,9 +29,9 @@ const Header = (props) => {
         readit
       </div>
       <div className='buttons'>
-        {!props.loggedIn && <button onClick={showLogin} className='login-btn btn'>Login</button>}
-        {props.loggedIn && <button onClick={logOut}className='log-out-btn btn'>Log out</button>}
-        {!props.loggedIn && <button onClick={showSignUp} className='sign-up-btn btn'>Sign up</button>}
+        {!props.user && <button onClick={showLogin} className='login-btn btn'>Login</button>}
+        {props.user && <button onClick={logOut}className='log-out-btn btn'>Log out</button>}
+        {!props.user && <button onClick={showSignUp} className='sign-up-btn btn'>Sign up</button>}
       </div>
       <button className='night-mode'><img alt='moon' src={moon} /></button>
       

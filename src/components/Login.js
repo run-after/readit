@@ -9,9 +9,9 @@ const Login = (props) => {
     const form = document.querySelector('.login-form');
 
     firebase.auth().signInWithEmailAndPassword(form[0].value, form[1].value)
-      .then(() => {
+      .then((userCredential) => {
+        props.setUser(userCredential.user);
         form.style = 'display: none;';
-        props.setLoggedIn(true);
       }).catch((error) => {
         const p = form.querySelector('p');
         p.textContent = error.message;

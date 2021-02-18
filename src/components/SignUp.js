@@ -15,7 +15,7 @@ const SignUp = (props) => {
         user.updateProfile({
           displayName: form[0].value
         }).then(function () {
-          props.setLoggedIn(true);
+          props.setUser(user);
           form.style = 'display: none;'
         }).catch(function(error) {
           console.log(error);
