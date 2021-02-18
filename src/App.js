@@ -1,5 +1,6 @@
 import './styles/App.css';
 import Header from './components/Header';
+import Feed from './components/Feed';
 import Login from './components/Login';
 import SignUp from './components/SignUp';
 import { useState } from 'react';
@@ -11,6 +12,7 @@ function App() {
   return (
     <div className="App">
       <Header loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
+      <Feed />
       <Login setLoggedIn={setLoggedIn} />
       <SignUp setLoggedIn={setLoggedIn} />
     </div>
