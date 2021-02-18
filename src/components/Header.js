@@ -24,7 +24,10 @@ const Header = (props) => {
   
   return (
     <div className='header'>
-      <img className='logo' alt='logo' src={logo} />
+      <div className='page-title'>
+        <img className='logo' alt='logo' src={logo} />
+        readit
+      </div>
       <div className='buttons'>
         {!props.loggedIn && <button onClick={showLogin} className='login-btn btn'>Login</button>}
         {props.loggedIn && <button onClick={logOut}className='log-out-btn btn'>Log out</button>}

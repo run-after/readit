@@ -13,6 +13,14 @@
   margin-left: 20px;
 }
 
+.page-title {
+  display: flex;
+  align-items: center;
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #00e354;
+}
+
 .buttons {
   display: flex;
 }
