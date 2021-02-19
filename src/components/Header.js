@@ -3,18 +3,9 @@ import moon from '../media/moon.png';
 import logo from '../media/alien.png';
 import firebase from 'firebase/app';
 import 'firebase/auth';
+import { Link } from 'react-router-dom';
 
 const Header = (props) => {
-
-  const showLogin = () => {
-    const form = document.querySelector('.login-form');
-    form.style = 'display: flex;'
-  };
-
-  const showSignUp = () => {
-    const form = document.querySelector('.sign-up-form');
-    form.style = 'display: flex';
-  };
 
   const logOut = () => {
     firebase.auth().signOut().then(() => {
@@ -24,14 +15,14 @@ const Header = (props) => {
   
   return (
     <div className='header'>
-      <div className='page-title'>
-        <img className='logo' alt='logo' src={logo} />
-        readit
-      </div>
+      <Link className='page-title' to='/'>
+          <img className='logo' alt='logo' src={logo} />
+          readit
+      </Link>
       <div className='buttons'>
-        {!props.user && <button onClick={showLogin} className='login-btn btn'>Login</button>}
-        {props.user && <button onClick={logOut}className='log-out-btn btn'>Log out</button>}
-        {!props.user && <button onClick={showSignUp} className='sign-up-btn btn'>Sign up</button>}
+        {!props.user && <Link to='/login'><button className='login-btn btn'>Login</button></Link>}
+        {props.user && <Link to='/'><button onClick={logOut}className='log-out-btn btn'>Log out</button></Link>}
+        {!props.user && <Link to='/signup'><button className='sign-up-btn btn'>Sign up</button></Link>}
       </div>
       <button className='night-mode'><img alt='moon' src={moon} /></button>
       
