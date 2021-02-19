@@ -1,8 +1,13 @@
 import '../styles/SignUp.css';
 import firebase from 'firebase/app';
 import 'firebase/auth';
+import { Redirect } from 'react-router-dom';
 
 const SignUp = (props) => {
+
+  if (props.user) {
+    return <Redirect to='/' />;
+  };
   
   let user;
 
@@ -22,15 +27,15 @@ const SignUp = (props) => {
         });
 
     }).catch((error) => {
-      const p = form.querySelector('p');
-      p.textContent = error.message;
+      const warning = form.querySelector('.warning');
+      warning.textContent = error.message;
     });
   };
   
   return (
     
     <form className='sign-up-form' onSubmit={makeAccount}>
-      <p></p>
+      <p className='warning'></p>
       <label>Display Name</label>
       <input name='displayName' type='text' required />
       <label>Email</label>
