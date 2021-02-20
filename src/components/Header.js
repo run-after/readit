@@ -1,5 +1,4 @@
 import '../styles/Header.css';
-import moon from '../media/moon.png';
 import logo from '../media/alien.png';
 import firebase from 'firebase/app';
 import 'firebase/auth';
@@ -21,11 +20,10 @@ const Header = (props) => {
       </Link>
       <div className='buttons'>
         {!props.user && <Link to='/login'><button className='login-btn btn'>Login</button></Link>}
+        {props.user && <span className='user-name'>{props.user.displayName}</span>}
         {props.user && <Link to='/'><button onClick={logOut}className='log-out-btn btn'>Log out</button></Link>}
         {!props.user && <Link to='/signup'><button className='sign-up-btn btn'>Sign up</button></Link>}
       </div>
-      <button className='night-mode'><img alt='moon' src={moon} /></button>
-      
     </div>
   );
 };

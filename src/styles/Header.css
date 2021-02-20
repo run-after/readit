@@ -46,24 +46,17 @@
 
 .log-out-btn {
   background: #00e3536c;
+  width: 75px;
 }
 
 .sign-up-btn {
   background: #00e353;
 }
 
-.night-mode {
-  background: transparent;
-  border: none;
-  margin-right: 20px;
-}
-
-.night-mode:hover {
-  cursor: pointer;
-}
-
-.night-mode img {
-  width: 25px;
+.user-name {
+  font-size: 0.75em;
+  opacity: 0.5;
+  align-self: center;
 }
 
 @media (max-width: 450px) {
