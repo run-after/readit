@@ -37,7 +37,12 @@ const SignUp = (props) => {
             user = userCredential.user;
             user.updateProfile({
               displayName: displayName
-            }).then(function () {
+            }).then(()=> {
+              firebase.firestore().collection('users').doc(displayName).set({
+                displayName: displayName,
+                email: email,
+                groups: []
+              });
               props.setUser(user);
             }).catch(function(error) {
               console.log(error);
