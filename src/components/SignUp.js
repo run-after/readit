@@ -1,6 +1,7 @@
 import '../styles/SignUp.css';
 import firebase from 'firebase/app';
 import 'firebase/auth';
+import 'firebase/firestore';
 import { Redirect } from 'react-router-dom';
 
 const SignUp = (props) => {
@@ -11,25 +12,45 @@ const SignUp = (props) => {
   
   let user;
 
+  const checkIfUniqueUserName = (name) => {
+    let arr = [];
+    return firebase.firestore().collection('users').get().then((querySnapShot) => {
+      querySnapShot.docs.forEach((doc) => {
+        arr.push(doc.data().displayName.toLowerCase());
+      });
+    }).then(() => {
+      return !arr.includes(name);
+    })
+  };
+
   const makeAccount = (e) => {
     e.preventDefault();
     const form = document.querySelector('.sign-up-form');
-    firebase.auth().createUserWithEmailAndPassword(form[1].value, form[2].value)
-      .then((userCredential) => {
-        user = userCredential.user;
-        user.updateProfile({
-          displayName: form[0].value
-        }).then(function () {
-          props.setUser(user);
-          form.style = 'display: none;'
-        }).catch(function(error) {
-          console.log(error);
-        });
+    const displayName = form[0].value;
+    const email = form[1].value;
+    const password = form[2].value;
 
-    }).catch((error) => {
-      const warning = form.querySelector('.warning');
-      warning.textContent = error.message;
-    });
+    checkIfUniqueUserName(displayName.toLowerCase()).then((result) => {
+      if (result) {
+        firebase.auth().createUserWithEmailAndPassword(email, password)
+          .then((userCredential) => {
+            user = userCredential.user;
+            user.updateProfile({
+              displayName: displayName
+            }).then(function () {
+              props.setUser(user);
+            }).catch(function(error) {
+              console.log(error);
+            });
+        }).catch((error) => {
+          const warning = form.querySelector('.warning');
+          warning.textContent = error.message;
+        });
+      } else {
+        const warning = form.querySelector('.warning');
+        warning.textContent = 'User name already exists';
+      };
+    });  
   };
   
   return (
