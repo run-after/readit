@@ -20,7 +20,7 @@ const Header = (props) => {
       </Link>
       <div className='buttons'>
         {!props.user && <Link to='/login'><button className='login-btn btn'>Login</button></Link>}
-        {props.user && <span className='user-name'>{props.user.displayName}</span>}
+        {props.user && <Link className='user-name' to={`/user/${props.user.displayName}`}>{props.user.displayName}</Link>}
         {props.user && <Link to='/'><button onClick={logOut}className='log-out-btn btn'>Log out</button></Link>}
         {!props.user && <Link to='/signup'><button className='sign-up-btn btn'>Sign up</button></Link>}
       </div>

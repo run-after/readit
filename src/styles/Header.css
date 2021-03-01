@@ -6,6 +6,7 @@
   position: fixed;
   width: 100%;
   background: white;
+  z-index: 1;
 }
 
 .header .logo {
@@ -57,6 +58,7 @@
   font-size: 0.75em;
   opacity: 0.5;
   align-self: center;
+  text-decoration: none;
 }
 
 @media (max-width: 450px) {
