@@ -1,0 +1,29 @@
+.user-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.user {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+  width: 75%;
+  align-self: center;
+  justify-content: center;
+  margin-top: 75px;
+  padding: 10px;
+}
+
+.image-placeholder {
+  height: 50px;
+  width: 50px;
+  border: 1px solid black;
+}
+
+.user .user-name {
+  font-weight: bold;
+  opacity: 1;
+}
