@@ -1,0 +1,65 @@
+.post {
+  display: flex;
+  flex-direction: row;
+  background: white;
+  width: 100%;
+}
+
+.left-margin {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
+  margin: 10px;
+}
+
+.post-content {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.post-header {
+  height: 10%;
+  opacity: 0.5;
+  margin: 5px 0 0 5px;
+  font-size: 0.8em;
+}
+
+.post-title {
+  font-weight: bold;
+  padding: 5px;
+}
+
+.post-body {
+  height: 80%;
+  margin: 0 5px;
+}
+
+.post-footer {
+  height: 10%;
+  margin: 5px;
+  display: flex;
+  align-items: center;
+  padding: 5px;
+}
+
+.vote-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.vote-btn:hover {
+  opacity: 0.5;
+}
+
+.up-arrow-img {
+  width: 15px;
+}
+
+.down-arrow-img {
+  width: 15px;
+  margin-top: 2px;
+}
