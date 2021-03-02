@@ -1,6 +1,5 @@
 .comment {
-  display: none; /*flex;*/
-  flex-direction: row;
+  display: flex;
   background: white;
   width: 100%;
   border-top: 1px solid black;

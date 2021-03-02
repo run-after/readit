@@ -63,3 +63,19 @@
   width: 15px;
   margin-top: 2px;
 }
+
+.comments {
+  display: none;
+  flex-direction: column;
+}
+
+.comment-form {
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
+  gap: 5px;
+}
+
+.comment-form button {
+  align-self: flex-start;
+}

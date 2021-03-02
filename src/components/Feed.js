@@ -69,7 +69,7 @@ const Feed = (props) => {
       <div className='feed'>
         {
           Object.keys(posts).map((key) => {
-            return <Post key={key} post={posts[key]} id={key} />
+            return <Post key={key} post={posts[key]} id={key} user={props.user} />
           })
         }
       </div>

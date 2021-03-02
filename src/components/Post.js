@@ -6,27 +6,43 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 import { useState, useEffect } from 'react';
 import Comment from './Comment';
+import commentFactory from '../scripts/commentFactory';
 
 const Post = (props) => {
 
   const [comments, setComments] = useState({});
 
-  const test = (e) => {
+  const testUpVote = (e) => {
     const post = e.target.parentNode.parentNode.parentNode;
     console.log(post)
   }
 
   const displayComments = (e) => {
     const post = e.target.parentNode.parentNode;
-    const comments = post.querySelectorAll('.comment');
-    comments.forEach((x) => {
-      if (x.style.display === 'flex') {
-        x.style = 'display: none';  
+    const comments = post.querySelector('.comments');
+    if (comments.style.display === 'flex') {
+        comments.style = 'display: none';
       } else {
-        x.style = 'display: flex';
+        comments.style = 'display: flex';
       };
-      
-    })
+  };
+
+  const createNewComment = (e) => {
+    e.preventDefault();
+    // save to DB
+
+    const form = e.target;
+    const newComment = commentFactory(props.user.displayName, form[0].value, props.id);
+    let id;
+    e.target.children[0].value = '';
+    firebase.firestore().collection('comments').add(newComment).then((doc) => {
+      id = doc.id;
+    });
+
+    setComments(prevState => ({
+      ...prevState,
+      [id]: newComment
+    }));
   };
 
   const timeNow = new Date().getTime();
@@ -48,7 +64,7 @@ const Post = (props) => {
   return (
     <div data-id={props.id} className='post'>
       <div className='left-margin'>
-        <button onClick={test} className='upVoteBtn vote-btn'>
+        <button onClick={testUpVote} className='upVoteBtn vote-btn'>
           <img className='up-arrow-img' src={upArrow} alt='up-arrow' />
         </button>
         {props.post.likes}
@@ -69,11 +85,21 @@ const Post = (props) => {
         <div className='post-footer'>
           <button onClick={displayComments}>{Object.keys(comments).length} comments</button>
         </div>
-        {
-          Object.keys(comments).map((key) => {
-            return <Comment key={key} comment={comments[key]} id={key} />
-          })
-        }
+        <div className='comments'>
+          {
+            props.user && 
+            <form className='comment-form' onSubmit={createNewComment}>
+              <textarea placeholder='Your thoughts...' />
+              <button className='submit-comment'>Save</button>
+            </form>
+          }
+          
+          {
+            Object.keys(comments).map((key) => {
+              return <Comment key={key} comment={comments[key]} id={key} />
+            })
+          }
+        </div>
       </div>  
     </div>
   );
@@ -85,7 +111,6 @@ export default Post;
 /*
 - Might want to add links to group on post and user on post
 - Need to make upvote/downvote button work
-- Comments should probably drop down and show all comments associated with post
 - Make like button work 
   - Will need to keep track of whether user up/down voted it
 

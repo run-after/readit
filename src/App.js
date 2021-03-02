@@ -28,12 +28,9 @@ function App() {
 
 export default App;
 
-// Need to figure out DB schema - Will need to be done so I know how
-// to write to it / create users / etc
-
 // User page: 
 // Show users comments (with comment info)
-// Show users posts (with post info)
+// Show users posts (with post info) --- done
 
 // Make groups page
 
@@ -45,11 +42,3 @@ export default App;
 // to make change color if clicked.
 
 // Need to set up session storage
-
-/* 
-  So far:
-- I can log in.
-- I can sign up.
-- I can log out.
-- 
-*/
