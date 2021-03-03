@@ -27,6 +27,16 @@
   font-size: 0.8em;
 }
 
+.comment-header a {
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+}
+
+.comment-header a:hover {
+  opacity: 0.75;
+}
+
 .comment-body {
   height: 80%;
   margin: 0 5px;

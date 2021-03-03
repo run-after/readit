@@ -7,6 +7,7 @@ import 'firebase/firestore';
 import { useState, useEffect } from 'react';
 import Comment from './Comment';
 import commentFactory from '../scripts/commentFactory';
+import { Link } from 'react-router-dom';
 
 const Post = (props) => {
 
@@ -14,8 +15,8 @@ const Post = (props) => {
 
   const testUpVote = (e) => {
     const post = e.target.parentNode.parentNode.parentNode;
-    console.log(post)
-  }
+    console.log(post);
+  };
 
   const displayComments = (e) => {
     const post = e.target.parentNode.parentNode;
@@ -29,7 +30,6 @@ const Post = (props) => {
 
   const createNewComment = (e) => {
     e.preventDefault();
-    // save to DB
 
     const form = e.target;
     const newComment = commentFactory(props.user.displayName, form[0].value, props.id);
@@ -59,7 +59,7 @@ const Post = (props) => {
         };
       });
     });
-  }, [props.id])
+  }, [props.id]);
 
   return (
     <div data-id={props.id} className='post'>
@@ -74,7 +74,9 @@ const Post = (props) => {
       </div>
       <div className='post-content'>
         <div className='post-header'>
-          {`Posted by: ${props.post.user} - ${formatTime(timeNow - props.post.timestamp)} - in ${props.post.group}`}
+          {'Posted by: '}
+          <Link to={`/user/${props.post.user}`}>{props.post.user}</Link> 
+           {` - ${formatTime(timeNow - props.post.timestamp)} - in ${props.post.group}`}
         </div>
         <div className='post-title'>
           {props.post.title}

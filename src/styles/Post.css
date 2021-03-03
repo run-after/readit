@@ -27,6 +27,16 @@
   font-size: 0.8em;
 }
 
+.post-header a {
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+}
+
+.post-header a:hover {
+  opacity: 0.75;
+}
+
 .post-title {
   font-weight: bold;
   padding: 5px;

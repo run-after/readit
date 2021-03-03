@@ -1,12 +1,12 @@
 import upArrow from '../media/up-arrow.png';
 import downArrow from '../media/down-arrow.png';
 import formatTime from '../scripts/formatTime';
-import '../styles/Comment.css'
+import '../styles/Comment.css';
+import { Link } from 'react-router-dom';
 
 const Comment = (props) => {
 
   const timeNow = new Date().getTime();
-
 
   return (
     <div data-id={props.id} className='comment'>
@@ -21,7 +21,9 @@ const Comment = (props) => {
       </div>
       <div className='comment-content'>
         <div className='comment-header'>
-          {`Posted by: ${props.comment.user} - ${formatTime(timeNow - props.comment.timestamp)}`}
+          {`Posted by: `}
+          <Link to={`/user/${props.comment.user}`}>{props.comment.user}</Link>
+          {` - ${formatTime(timeNow - props.comment.timestamp)}`}
         </div>
         <div className='comment-body'>
           {props.comment.content}
@@ -35,5 +37,5 @@ export default Comment;
 
 /*
   - Make like button work
-  - Make form for add comment
+  - Make like button change color
 */
