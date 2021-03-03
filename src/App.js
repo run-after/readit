@@ -7,9 +7,17 @@ import User from './components/User';
 import { useState } from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
-function App() {
+function App() { 
 
-  const [user, setUser] = useState(null);
+  let initialUser;
+
+  if (sessionStorage.length < 1) {
+    initialUser = null;
+  } else {
+    initialUser = JSON.parse(sessionStorage[Object.keys(sessionStorage)[0]]);
+  };
+
+  const [user, setUser] = useState(initialUser);
 
   return (
     <div className="App">

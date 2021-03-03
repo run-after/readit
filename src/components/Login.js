@@ -12,17 +12,16 @@ const Login = (props) => {
   const signIn = (e) => {
     e.preventDefault();
     const form = document.querySelector('.login-form');
-
+    
     firebase.auth().signInWithEmailAndPassword(form[0].value, form[1].value)
       .then((userCredential) => {
-        props.setUser(userCredential.user);
-        
+        props.setUser(userCredential.user); 
       }).catch((error) => {
         const warning = form.querySelector('.warning');
         warning.textContent = error.message;
-      });
-    };
-
+      });  
+  };
+    
   return (
     <form className='login-form' onSubmit={signIn}>
       <p className='warning'></p>
