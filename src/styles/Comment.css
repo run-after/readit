@@ -1,6 +1,6 @@
 .comment {
   display: flex;
-  background: white;
+  background: rgb(245, 245, 245);
   width: 100%;
   border-top: 1px solid black;
 }
