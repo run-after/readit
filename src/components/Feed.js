@@ -15,7 +15,8 @@ const Feed = (props) => {
   const [groups, setGroups] = useState({ content: [] });
 
   const showPostForm = () => {
-    document.querySelector('.post-form').style = 'display: flex;'
+    const postForm = document.querySelector('.post-form');
+    postForm.style = 'display: flex;';
   };
 
   const hidePostForm = () => {
@@ -34,14 +35,13 @@ const Feed = (props) => {
     let id;
     db.collection('posts').add(newPost).then((doc) => {
       id = doc.id;
+    }).then(() => {
+      setPosts(prevState => ({
+        ...prevState,
+        [id]: newPost
+      }));
     });
-
     hidePostForm();
-    setPosts(prevState => ({
-      ...prevState,
-      [id]: newPost
-    }));
-
   };
  
   useEffect(() => {
@@ -106,4 +106,5 @@ export default Feed;
 - Might want to add a reference to user object in DB of post after post is created
 - Show all posts unless user is logged in - then only show groups subscribed to
 - Make a dropdown so they can select what group to view (or maybe that will just  be a group page)
+- Close create post modal if clicked away from
 */
