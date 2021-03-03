@@ -30,6 +30,7 @@ const SignUp = (props) => {
     const email = form[1].value;
     const password = form[2].value;
 
+    
     checkIfUniqueUserName(displayName.toLowerCase()).then((result) => {
       if (result) {
         firebase.auth().createUserWithEmailAndPassword(email, password)
@@ -37,20 +38,23 @@ const SignUp = (props) => {
             user = userCredential.user;
             user.updateProfile({
               displayName: displayName
-            }).then(()=> {
+            }).then(() => {
+              props.setUser(user);
+            });
+          }).catch((error) => {
+            const warning = form.querySelector('.warning');
+            warning.textContent = error.message;
+          }).then(() => {
               firebase.firestore().collection('users').doc(displayName).set({
                 displayName: displayName,
                 email: email,
                 groups: []
               });
-              props.setUser(user);
+          }).then(() => {
+            firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION);
             }).catch(function(error) {
               console.log(error);
             });
-        }).catch((error) => {
-          const warning = form.querySelector('.warning');
-          warning.textContent = error.message;
-        });
       } else {
         const warning = form.querySelector('.warning');
         warning.textContent = 'User name already exists';
