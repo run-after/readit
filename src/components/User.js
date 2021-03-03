@@ -4,11 +4,13 @@ import { useState, useEffect } from 'react';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import Post from './Post';
+import Comment from './Comment';
 
 const User = () => {
 
   const [doesUserExist, setDoesUserExist] = useState(false);
-  const [userPosts, setUserPosts] = useState({ content: [] });
+  const [userPosts, setUserPosts] = useState({});
+  const [userComments, setUserComments] = useState({});
 
   const { name } = useParams();
   
@@ -22,21 +24,28 @@ const User = () => {
   });
 
   useEffect(() => {
-    // This gets every doc in posts collection and logs them
+    // Lists posts made by user
     firebase.firestore().collection('posts').get().then((querySnapShot) => {
-      let tempPosts = [];
+      let tempPosts = {};
       querySnapShot.docs.forEach((value) => {
         if (value.data().user === name) {
-          tempPosts.push(value.data());  
-        }
+          tempPosts[value.id] = value.data();
+        };
       });
-      setUserPosts({ content: tempPosts });
+      setUserPosts(tempPosts);
     });
-  }, [name])
 
-  //thisUserRef.get().then((doc) => {
-  //  console.log(doc.data())
-  //});
+    // Lists all comments made by user
+    firebase.firestore().collection('comments').get().then((querySnapShot) => {
+      let tempComments = {};
+      querySnapShot.docs.forEach((value) => {
+        if (value.data().user === name) {
+          tempComments[value.id] = value.data();
+        };
+      });
+      setUserComments(tempComments);
+    });
+  }, [name]);
 
   return (
     <div className='user-container'>
@@ -53,16 +62,20 @@ const User = () => {
         !doesUserExist && <div className='user'>Does not exist</div>
       }
       <div className='feed'>
+        Posts:
         {
-          userPosts.content.map((post) => {
-            return <Post key={post.title} post={post} />
+          Object.keys(userPosts).map((key) => {
+            return <Post key={userPosts[key].title} post={userPosts[key]} />
+          })
+        }
+        Comments:
+        {
+          Object.keys(userComments).map((key) => {
+            return <Comment key={key} comment={userComments[key]} />
           })
         }
       </div>
-      
     </div>
-    
-    
   );
 };
 
