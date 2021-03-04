@@ -105,6 +105,7 @@ const Feed = (props) => {
           }
         </select>
         <button>submit</button>
+        <button className='close-form' onClick={hidePostForm}>x</button>
       </form>
     
     </div>

@@ -23,7 +23,6 @@
 .add-post-btn {
   border: none;
   background: #00e354;
-
   width: 75%;
   padding: 5px;
 }
@@ -43,7 +42,7 @@
   left: 0;
   bottom: 0;
   margin: auto;
-  background: #00e35346;
+  background: #00e353d3;
   padding: 20px;
   height: 300px;
   width: 300px;
@@ -52,4 +51,24 @@
 
 .post-form .content {
   height: 50%;
+}
+
+.close-form {
+  border-radius: 100%;
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  height: 20px;
+  width: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: white;
+}
+
+.close-form:hover {
+  opacity: 0.5;
 }
