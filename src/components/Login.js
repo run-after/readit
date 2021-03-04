@@ -17,7 +17,8 @@ const Login = (props) => {
     .then(() => {
       firebase.auth().signInWithEmailAndPassword(form[0].value, form[1].value)
         .then((userCredential) => {
-        props.setUser(userCredential.user);
+          props.setUser(userCredential.user);
+          window.location.reload();// loads my groups on header
       }).catch((error) => {
         const warning = form.querySelector('.warning');
         warning.textContent = error.message;
