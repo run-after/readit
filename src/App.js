@@ -4,6 +4,7 @@ import Login from './components/Login';
 import SignUp from './components/SignUp';
 import Feed from './components/Feed';
 import User from './components/User';
+import Group from './components/Group';
 import { useState } from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
@@ -28,6 +29,7 @@ function App() {
           <Route exact path='/login' render={() => <Login user={user} setUser={setUser} />} />
           <Route exact path='/signup' render={() => <SignUp user={user} setUser={setUser} />} />
           <Route exact path='/user/:name' render={() => <User />} />
+          <Route exact path='/groups/:group' render={() => <Group user={user} /> } />
         </Switch>
       </BrowserRouter>
     </div>
@@ -36,17 +38,14 @@ function App() {
 
 export default App;
 
-// User page: 
-// Show users comments (with comment info)
-// Show users posts (with post info) --- done
+/*
+  First make groups and link those groups on each post.
+  List groups in right hand margin?
+  Need a way to make a new group
 
-// Make groups page
+  Make unfound route go to 404
 
-// Make feed show all posts --- I think this is done
+  Up/down vote arrows need to be able to turn color
 
-// Make unfound route go to 404
-
-// Modify up/down arrows to be transparent in center and adjust background
-// to make change color if clicked.
-
-// Need to set up session storage
+  Button on right margin to make new pic post doesn't work
+*/
