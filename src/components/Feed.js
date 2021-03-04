@@ -6,12 +6,10 @@ import Post from './Post';
 import postFactory from '../scripts/postFactory';
 
 const Feed = (props) => {
-
+  
   const db = firebase.firestore();
-  // App passes in user prop
-  //console.log(props);
-  const [posts, setPosts] = useState({});
 
+  const [posts, setPosts] = useState({});
   const [groups, setGroups] = useState({ content: [] });
 
   const showPostForm = () => {
@@ -45,12 +43,21 @@ const Feed = (props) => {
   };
  
   useEffect(() => {
-    // This gets every doc in posts collection and logs them
     db.collection('posts').get().then((querySnapShot) => {
       let tempPosts = {};
-      querySnapShot.docs.forEach((value) => {
-        tempPosts[value.id] = value.data();
-      });
+      // Check if in a group page, and only display those
+      if (props.group) {
+        querySnapShot.docs.forEach((value) => {
+          if (value.data().group === props.group) {
+            tempPosts[value.id] = value.data();  
+          };
+        }); 
+        // if not, display all posts
+      } else {
+        querySnapShot.docs.forEach((value) => {
+          tempPosts[value.id] = value.data();
+        });  
+      };
       setPosts(tempPosts);
     });
 
@@ -62,7 +69,7 @@ const Feed = (props) => {
       });
       setGroups({ content: tempGroups });
   })
-  }, [db]);
+  }, [db, props.group]);
 
   return (
     <div className='container'>
@@ -88,10 +95,14 @@ const Feed = (props) => {
         <input placeholder='Enter your title' />
         <textarea className='content' placeholder='Enter your content' />
         <select required name='groups'>
-          <option value=''>--Choose a group</option>
-          {groups.content.map((group) => {
+          { props.group && <option value={props.group}>{props.group}</option>}
+          { !props.group && <option value=''>--Choose a group</option> }
+          {
+            !props.group &&
+            groups.content.map((group) => {
             return <option key={group} value={group}>{group}</option>
-          })}
+            })
+          }
         </select>
         <button>submit</button>
       </form>
