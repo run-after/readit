@@ -30,7 +30,6 @@ const Post = (props) => {
 
   const createNewComment = (e) => {
     e.preventDefault();
-
     const form = e.target;
     const newComment = commentFactory(props.user.displayName, form[0].value, props.id);
     let id;
@@ -76,7 +75,8 @@ const Post = (props) => {
         <div className='post-header'>
           {'Posted by: '}
           <Link to={`/user/${props.post.user}`}>{props.post.user}</Link> 
-           {` - ${formatTime(timeNow - props.post.timestamp)} - in ${props.post.group}`}
+          {` - ${formatTime(timeNow - props.post.timestamp)} - in `}
+          <Link to={`/groups/${props.post.group}`}>{props.post.group}</Link>
         </div>
         <div className='post-title'>
           {props.post.title}
@@ -111,8 +111,6 @@ const Post = (props) => {
 export default Post;
 
 /*
-- Might want to add links to group on post and user on post
-- Need to make upvote/downvote button work
 - Make like button work 
   - Will need to keep track of whether user up/down voted it
 
