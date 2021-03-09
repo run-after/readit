@@ -95,13 +95,14 @@ const Feed = (props) => {
         <input placeholder='Enter your title' />
         <textarea className='content' placeholder='Enter your content' />
         <select required name='groups'>
-          { props.group && <option value={props.group}>{props.group}</option>}
-          { !props.group && <option value=''>--Choose a group</option> }
+          <option value=''>--Choose a group</option>
           {
-            !props.group &&
-            groups.content.map((group) => {
-            return <option key={group} value={group}>{group}</option>
-            })
+            (props.group && <option value={props.group}>{props.group}</option>) ||
+            (
+              groups.content.map((group) => {
+                return <option key={group} value={group}>{group}</option>
+              })
+            )
           }
         </select>
         <button>submit</button>
@@ -118,5 +119,4 @@ export default Feed;
 - Might want to add a reference to user object in DB of post after post is created
 - Show all posts unless user is logged in - then only show groups subscribed to
 - Make a dropdown so they can select what group to view (or maybe that will just  be a group page)
-- Close create post modal if clicked away from
 */
