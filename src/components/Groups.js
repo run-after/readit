@@ -8,11 +8,12 @@ const Groups = (props) => {
 
   const [groups, setGroups] = useState({});
   const [userGroups, setUserGroups] = useState({ groups: [] });
-  const [userRef, setUserRef] = useState({});  
-
+  const [userRef, setUserRef] = useState({});
+  const [shouldDisplayForm, setShouldDisplayForm] = useState(false);
+  
   const joinGroup = (e) => {
     if (props.user) {
-      const groupName = e.target.parentNode.dataset.name;
+      const groupName = e.target.parentNode.parentNode.dataset.name;
       const tempUserGroups = userGroups.groups;
       tempUserGroups.push(groupName);
       setUserGroups({ groups: tempUserGroups });
@@ -28,7 +29,7 @@ const Groups = (props) => {
 
   const leaveGroup = (e) => {
     if(props.user){
-      const groupName = e.target.parentNode.dataset.name;
+      const groupName = e.target.parentNode.parentNode.dataset.name;
       let tempUserGroups = userGroups.groups;
       tempUserGroups = tempUserGroups.filter((group) => { return group !== groupName })
       setUserGroups({ groups: tempUserGroups });
@@ -40,6 +41,31 @@ const Groups = (props) => {
     } else {
       alert('sign in first');// TEMP
     }
+  };
+
+  const displayForm = () => {
+    setShouldDisplayForm(true);
+  };
+
+  const createGroup = (e) => {
+    e.preventDefault();
+    const groupName = e.target[0].value.toLowerCase();
+    const groupDescription = e.target[1].value.toLowerCase();
+    if (!Object.keys(groups).includes(groupName)) {
+      firebase.firestore().collection('groups').doc(groupName).set({
+        description: groupDescription
+      }).then(() => {
+        setShouldDisplayForm(false);
+        setGroups(prevState => ({
+          ...prevState,
+          [groupName]: {
+            description: groupDescription
+          }
+        }));
+      });
+    } else {// TEMP - not supposed to manipulate DOM
+      document.querySelector('.warning').textContent = 'Group already exists';
+    };
   };
 
   useEffect(() => {
@@ -91,16 +117,28 @@ const Groups = (props) => {
         <div className='right-column'>
           {
             props.user &&
-            <button className='create-group-btn'>Create your own group</button>                 
+            <button className='create-group-btn' onClick={displayForm}>Create your own group</button>                 
           }
         </div>
       </div>
+      {
+        shouldDisplayForm &&
+        <form className='create-group-form' onSubmit={createGroup}> 
+          <h1>Create your group</h1>
+          <div>
+            <div className='warning'></div>
+            <label>Group name</label>
+            <input required maxLength='20' placeholder='Group name...' />
+          </div>
+          <div>
+            <label>Group description</label>
+            <textarea required minLength='5' maxLength='50' placeholder='Enter description' />
+          </div>        
+          <button>submit</button>
+        </form>
+        }
     </div>
   )
 };
 
 export default Groups;
-
-
-// style page
-// make a way to create a new group
