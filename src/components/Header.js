@@ -43,7 +43,7 @@ const Header = (props) => {
           return <Link key={`header${name}`}to={`/groups/${name}`}>{name.toUpperCase()}</Link>
         })}
         </div>
-        <Link className='more-groups' to={`/groups`}>MORE>></Link>
+        <Link className='more-groups' to={`/groups`}>{'MORE>>'}</Link>
       </div>
       <div className='header-main'>
         <Link className='page-title' to='/'>
@@ -63,5 +63,3 @@ const Header = (props) => {
 };
 
 export default Header;
-
-// LINE 44 - need to make a GROUPS PAGE TO LIST ALL GROUPS (or just a drop down)

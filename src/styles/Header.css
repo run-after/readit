@@ -12,6 +12,7 @@
   display: flex;
   padding: 2px;
   align-items: center;
+  background: #d3d3d3;
 }
 
 .groups {
