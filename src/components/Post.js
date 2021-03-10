@@ -12,10 +12,36 @@ import { Link } from 'react-router-dom';
 const Post = (props) => {
 
   const [comments, setComments] = useState({});
+  const [likes, setLikes] = useState(props.post.likes);
 
-  const testUpVote = (e) => {
-    const post = e.target.parentNode.parentNode.parentNode;
-    console.log(post);
+  const UpVote = (e) => {
+    if (props.user) {
+      const post = e.target.parentNode.parentNode.parentNode;
+      // find post in DB and up the score 1 point.
+      let tempPost;
+      firebase.firestore().collection('posts').doc(post.dataset.id).get().then((doc) => {
+        tempPost = doc.data();
+        tempPost.likes = likes + 1;
+      }).then(() => {
+        firebase.firestore().collection('posts').doc(post.dataset.id).set(
+          tempPost
+        );
+        setLikes(likes + 1);
+      });
+
+      // find user in DB and add like with ref to post
+      let tempUser;
+      firebase.firestore().collection('users').doc(props.user.displayName).get().then((doc) => {
+        tempUser = doc.data();
+        if (!tempUser.likes.includes(post.dataset.id)) {
+          tempUser.likes.push(post.dataset.id);
+        };
+      }).then(() => {
+        firebase.firestore().collection('users').doc(props.user.displayName).set(
+          tempUser
+        );
+      }); 
+    };
   };
 
   const displayComments = (e) => {
@@ -63,10 +89,10 @@ const Post = (props) => {
   return (
     <div data-id={props.id} className='post'>
       <div className='left-margin'>
-        <button onClick={testUpVote} className='upVoteBtn vote-btn'>
+        <button onClick={UpVote} className='upVoteBtn vote-btn'>
           <img className='up-arrow-img' src={upArrow} alt='up-arrow' />
         </button>
-        {props.post.likes}
+        {likes}
         <button className='down-vote-button vote-btn'>
           <img className='down-arrow-img' src={downArrow} alt='down-arrow' />
         </button>
@@ -109,9 +135,3 @@ const Post = (props) => {
 };
 
 export default Post;
-
-/*
-- Make like button work 
-  - Will need to keep track of whether user up/down voted it
-
-*/

@@ -30,7 +30,6 @@ const SignUp = (props) => {
     const email = form[1].value;
     const password = form[2].value;
 
-    
     checkIfUniqueUserName(displayName.toLowerCase()).then((result) => {
       if (result) {
         firebase.auth().createUserWithEmailAndPassword(email, password)
@@ -48,7 +47,8 @@ const SignUp = (props) => {
               firebase.firestore().collection('users').doc(displayName).set({
                 displayName: displayName,
                 email: email,
-                groups: []
+                groups: [],
+                likes: []
               });
           }).then(() => {
             firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION);
@@ -63,7 +63,6 @@ const SignUp = (props) => {
   };
   
   return (
-    
     <form className='sign-up-form' onSubmit={makeAccount}>
       <p className='warning'></p>
       <label>Display Name</label>
@@ -74,7 +73,6 @@ const SignUp = (props) => {
       <input name='password' type='password' minLength='6' required/>
       <button className='btn' type='submit'>Create Account</button>
     </form>
-    
   );
 };
 
