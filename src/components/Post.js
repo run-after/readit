@@ -1,4 +1,5 @@
 import upArrow from '../media/up-arrow.png';
+import upArrowLiked from '../media/up-arrow-liked.png';
 import downArrow from '../media/down-arrow.png';
 import '../styles/Post.css';
 import formatTime from '../scripts/formatTime';
@@ -10,40 +11,36 @@ import commentFactory from '../scripts/commentFactory';
 import { Link } from 'react-router-dom';
 
 const Post = (props) => {
-
+  
   const [comments, setComments] = useState({});
   const [likes, setLikes] = useState(props.post.likes);
+  const [liked, setLiked] = useState(false);
 
-  const UpVote = (e) => {
-    if (props.user) {
-      const post = e.target.parentNode.parentNode.parentNode;
+  const UpVote = () => {
+    if (props.user && !props.userRef.likes.includes(props.id)) {
       // find post in DB and up the score 1 point.
       let tempPost;
-      firebase.firestore().collection('posts').doc(post.dataset.id).get().then((doc) => {
+      firebase.firestore().collection('posts').doc(props.id).get().then((doc) => {
         tempPost = doc.data();
         tempPost.likes = likes + 1;
       }).then(() => {
-        firebase.firestore().collection('posts').doc(post.dataset.id).set(
+        firebase.firestore().collection('posts').doc(props.id).set(
           tempPost
         );
         setLikes(likes + 1);
       });
-
-      // find user in DB and add like with ref to post
-      let tempUser;
-      firebase.firestore().collection('users').doc(props.user.displayName).get().then((doc) => {
-        tempUser = doc.data();
-        if (!tempUser.likes.includes(post.dataset.id)) {
-          tempUser.likes.push(post.dataset.id);
-        };
-      }).then(() => {
-        firebase.firestore().collection('users').doc(props.user.displayName).set(
-          tempUser
-        );
-      }); 
+      // add like with ref to post
+      const tempUser = props.userRef;
+      tempUser.likes.push(props.id);
+      firebase.firestore().collection('users').doc(props.user.displayName).set(
+        tempUser
+      );
+      setLiked(true);
     };
   };
 
+  // Can change this so you don't change style, just set state and rerender
+  // if button clicked
   const displayComments = (e) => {
     const post = e.target.parentNode.parentNode;
     const comments = post.querySelector('.comments');
@@ -84,17 +81,25 @@ const Post = (props) => {
         };
       });
     });
+
+    if (props.userRef) {
+      setLiked(props.userRef.likes.includes(props.id))
+    }
   }, [props.id]);
 
   return (
     <div data-id={props.id} className='post'>
       <div className='left-margin'>
         <button onClick={UpVote} className='upVoteBtn vote-btn'>
-          <img className='up-arrow-img' src={upArrow} alt='up-arrow' />
+          {
+            (liked &&
+              <img className='up-arrow-img' src={upArrowLiked} alt='orange-up-arrow' />) ||
+            <img className='up-arrow-img' src={upArrow} alt='up-arrow' />
+          }
         </button>
         {likes}
         <button className='down-vote-button vote-btn'>
-          <img className='down-arrow-img' src={downArrow} alt='down-arrow' />
+          <img className='down-arrow-img' src={downArrow} alt='down-arrow' />          
         </button>
       </div>
       <div className='post-content'>

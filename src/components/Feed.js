@@ -12,11 +12,12 @@ const Feed = (props) => {
   const [posts, setPosts] = useState({});
   const [groups, setGroups] = useState({ content: [] });
 
+  //GET RID OF
   const showPostForm = () => {
     const postForm = document.querySelector('.post-form');
     postForm.style = 'display: flex;';
   };
-
+  //GET RID OF
   const hidePostForm = () => {
     const form = document.querySelector('.post-form');
     form.style = 'display: none;';
@@ -76,7 +77,7 @@ const Feed = (props) => {
       <div className='feed'>
         {
           Object.keys(posts).map((key) => {
-            return <Post key={key} post={posts[key]} id={key} user={props.user} />
+            return <Post key={key} post={posts[key]} id={key} user={props.user} userRef={props.userRef}/>
           })
         }
       </div>
@@ -119,4 +120,6 @@ export default Feed;
 - Might want to add a reference to user object in DB of post after post is created
 - Show all posts unless user is logged in - then only show groups subscribed to
 - Make a dropdown so they can select what group to view (or maybe that will just  be a group page)
+- Check why so many renders
+- remove post-form like it is. Make it more like groups page form
 */
