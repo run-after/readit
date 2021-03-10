@@ -11,14 +11,12 @@ const Login = (props) => {
 
   const signIn = (e) => {
     e.preventDefault();
-    const form = document.querySelector('.login-form');
-
+    const form = e.target;
     firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
     .then(() => {
       firebase.auth().signInWithEmailAndPassword(form[0].value, form[1].value)
         .then((userCredential) => {
           props.setUser(userCredential.user);
-          window.location.reload();// loads my groups on header
       }).catch((error) => {
         const warning = form.querySelector('.warning');
         warning.textContent = error.message;
