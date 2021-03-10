@@ -1,6 +1,7 @@
 import upArrow from '../media/up-arrow.png';
 import upArrowLiked from '../media/up-arrow-liked.png';
 import downArrow from '../media/down-arrow.png';
+import downArrowHate from '../media/down-arrow-hate.png';
 import '../styles/Post.css';
 import formatTime from '../scripts/formatTime';
 import firebase from 'firebase/app';
@@ -15,7 +16,9 @@ const Post = (props) => {
   const [comments, setComments] = useState({});
   const [likes, setLikes] = useState(props.post.likes);
   const [liked, setLiked] = useState(false);
+  const [hated, setHated] = useState(false);
 
+  // need to check if user hated it, if so remove the hated from DB
   const UpVote = () => {
     if (props.user && !props.userRef.likes.includes(props.id)) {
       // find post in DB and up the score 1 point.
@@ -32,10 +35,39 @@ const Post = (props) => {
       // add like with ref to post
       const tempUser = props.userRef;
       tempUser.likes.push(props.id);
+      if (tempUser.hates.includes(props.id)) {
+        tempUser.hates = tempUser.hates.filter((x) => x !== props.id);
+      };
       firebase.firestore().collection('users').doc(props.user.displayName).set(
         tempUser
       );
       setLiked(true);
+      setHated(false);
+    };
+  };
+
+  const downVote = () => {
+    if (props.user && !props.userRef.hates.includes(props.id)) {
+      let tempPost;
+      firebase.firestore().collection('posts').doc(props.id).get().then((doc) => {
+        tempPost = doc.data();
+        tempPost.likes = likes - 1;
+      }).then(() => {
+        firebase.firestore().collection('posts').doc(props.id).set(
+          tempPost
+        );
+        setLikes(likes - 1);
+      });
+      const tempUser = props.userRef;
+      tempUser.hates.push(props.id);
+      if (tempUser.likes.includes(props.id)) {
+        tempUser.likes = tempUser.likes.filter((x) => x !== props.id);
+      };
+      firebase.firestore().collection('users').doc(props.user.displayName).set(
+        tempUser
+      );
+      setHated(true);
+      setLiked(false);
     };
   };
 
@@ -98,8 +130,12 @@ const Post = (props) => {
           }
         </button>
         {likes}
-        <button className='down-vote-button vote-btn'>
-          <img className='down-arrow-img' src={downArrow} alt='down-arrow' />          
+        <button onClick={downVote} className='down-vote-button vote-btn'>
+          {
+            (hated && 
+              <img className='down-arrow-img' src={downArrowHate} alt='blue-down-arrow' />) ||
+              <img className='down-arrow-img' src={downArrow} alt='down-arrow' />
+          }
         </button>
       </div>
       <div className='post-content'>

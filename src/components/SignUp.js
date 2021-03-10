@@ -48,7 +48,8 @@ const SignUp = (props) => {
                 displayName: displayName,
                 email: email,
                 groups: [],
-                likes: []
+                likes: [],
+                hates: []
               });
           }).then(() => {
             firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION);
