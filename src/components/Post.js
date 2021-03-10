@@ -18,7 +18,6 @@ const Post = (props) => {
   const [liked, setLiked] = useState(false);
   const [hated, setHated] = useState(false);
 
-  // need to check if user hated it, if so remove the hated from DB
   const UpVote = () => {
     if (props.user && !props.userRef.likes.includes(props.id)) {
       // find post in DB and up the score 1 point.
@@ -91,12 +90,12 @@ const Post = (props) => {
     e.target.children[0].value = '';
     firebase.firestore().collection('comments').add(newComment).then((doc) => {
       id = doc.id;
+    }).then(() => {
+      setComments(prevState => ({
+        ...prevState,
+        [id]: newComment
+      }));
     });
-
-    setComments(prevState => ({
-      ...prevState,
-      [id]: newComment
-    }));
   };
 
   const timeNow = new Date().getTime();
@@ -117,7 +116,7 @@ const Post = (props) => {
     if (props.userRef) {
       setLiked(props.userRef.likes.includes(props.id))
     }
-  }, [props.id]);
+  }, [props.id, props.userRef]);
 
   return (
     <div data-id={props.id} className='post'>
@@ -165,7 +164,7 @@ const Post = (props) => {
           
           {
             Object.keys(comments).map((key) => {
-              return <Comment key={key} comment={comments[key]} id={key} />
+              return <Comment key={key} comment={comments[key]} id={key} user={props.user} userRef={props.userRef} />
             })
           }
         </div>

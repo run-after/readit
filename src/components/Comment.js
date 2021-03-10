@@ -1,22 +1,98 @@
 import upArrow from '../media/up-arrow.png';
+import UpArrowLiked from '../media/up-arrow-liked.png';
 import downArrow from '../media/down-arrow.png';
+import downArrowHate from '../media/down-arrow-hate.png';
 import formatTime from '../scripts/formatTime';
 import '../styles/Comment.css';
 import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import firebase from 'firebase/app';
+import 'firebase/firestore';
 
 const Comment = (props) => {
+  
+  const [likes, setLikes] = useState(props.comment.likes);
+  const [liked, setLiked] = useState(false);
+  const [hated, setHated] = useState(false);
 
   const timeNow = new Date().getTime();
+
+  const UpVote = () => {
+  
+    if (props.user && !props.userRef.likes.includes(props.id)) {
+      // find post in DB and up the score 1 point.
+      let tempComment;
+      firebase.firestore().collection('comments').doc(props.id).get().then((doc) => {
+        tempComment = doc.data();
+        tempComment.likes = likes + 1;
+      }).then(() => {
+        firebase.firestore().collection('comments').doc(props.id).set(
+          tempComment
+        );
+        setLikes(likes + 1);
+      });
+      // add like with ref to post
+      const tempUser = props.userRef;
+      tempUser.likes.push(props.id);
+      if (tempUser.hates.includes(props.id)) {
+        tempUser.hates = tempUser.hates.filter((x) => x !== props.id);
+      };
+      firebase.firestore().collection('users').doc(props.user.displayName).set(
+        tempUser
+      );
+      setLiked(true);
+      setHated(false);
+    };
+  };
+
+  const downVote = () => {
+    if (props.user && !props.userRef.hates.includes(props.id)) {
+      let tempComment;
+      firebase.firestore().collection('comments').doc(props.id).get().then((doc) => {
+        tempComment = doc.data();
+        tempComment.likes = likes - 1;
+      }).then(() => {
+        firebase.firestore().collection('comments').doc(props.id).set(
+          tempComment
+        );
+        setLikes(likes - 1);
+      });
+      const tempUser = props.userRef;
+      tempUser.hates.push(props.id);
+      if (tempUser.likes.includes(props.id)) {
+        tempUser.likes = tempUser.likes.filter((x) => x !== props.id);
+      };
+      firebase.firestore().collection('users').doc(props.user.displayName).set(
+        tempUser
+      );
+      setHated(true);
+      setLiked(false);
+    };
+  };
+
+  useEffect(() => {
+    if (props.userRef) {
+      setLiked(props.userRef.likes.includes(props.id))
+    };
+  }, [props.userRef, props.id]);
 
   return (
     <div data-id={props.id} className='comment'>
       <div className='left-margin'>
-        <button className='upVoteBtn vote-btn'>
-          <img className='up-arrow-img' src={upArrow} alt='up-arrow' />
+        <button onClick={UpVote} className='upVoteBtn vote-btn'>
+          {
+            (liked &&
+              <img className='up-arrow-img' src={UpArrowLiked} alt='orange-up-arrow' />) ||
+            <img className='up-arrow-img' src={upArrow} alt='up-arrow' />
+          }
         </button>
-        {props.comment.likes}
-        <button className='down-vote-button vote-btn'>
-          <img className='down-arrow-img' src={downArrow} alt='down-arrow' />
+        {likes}
+        <button onClick={downVote} className='down-vote-button vote-btn'>
+          {
+            (hated && 
+              <img className='down-arrow-img' src={downArrowHate} alt='blue-down-arrow' />) ||
+              <img className='down-arrow-img' src={downArrow} alt='down-arrow' />
+          }
         </button>
       </div>
       <div className='comment-content'>
@@ -34,8 +110,3 @@ const Comment = (props) => {
 };
 
 export default Comment;
-
-/*
-  - Make like button work
-  - Make like button change color
-*/
