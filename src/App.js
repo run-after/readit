@@ -11,7 +11,7 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 
-function App() { 
+function App() {
 
   let initialUser;
 
@@ -23,7 +23,7 @@ function App() {
 
   const [user, setUser] = useState(initialUser);
   const [userRef, setUserRef] = useState(null);
-
+console.log(userRef)
   useEffect(() => {
     if (user) {
       firebase.firestore().collection('users').doc(user.displayName).get().then((doc) => {
@@ -37,10 +37,10 @@ function App() {
       <BrowserRouter>
         <Header user={user} setUser={setUser} />
         <Switch>
-          <Route exact path='/' render={() => <Feed user={user} userRef={userRef}/>} />
+          <Route exact path='/' render={() => <Feed user={user} userRef={userRef} />} />
           <Route exact path='/login' render={() => <Login user={user} setUser={setUser} />} />
-          <Route exact path='/signup' render={() => <SignUp user={user} setUser={setUser} />} />
-          <Route exact path='/user/:name' render={() => <User />} />
+          <Route exact path='/signup' render={() => <SignUp user={user} setUser={setUser} setUserRef={setUserRef} />} />
+          <Route exact path='/user/:name' render={() => <User user={user} userRef={userRef} />} />
           <Route exact path='/groups/:group' render={() => <Group user={user} />} />
           <Route exact path='/groups' render={() => <Groups user={user} />} />
         </Switch>
@@ -52,13 +52,17 @@ function App() {
 export default App;
 
 /*
+  session storage is deleting likes / hates from DB
+
+  When joining groups, it doesn't display straight away on header... Have to refresh
+
   Make unfound route go to 404
-
-  Up/down vote arrows need to be able to turn color
-
-  Up/down vote arrows need to change score on post and log that user made it
 
   Button on right margin to make new pic post doesn't work
 
   Maybe move group list from header to right margin to fill space???
+
+  Maybe, when first making a post or a comment, it's upvoted by you right away
+
+  Remove link from Header with name. When on a different user page, it doesn't update info
 */
