@@ -3,6 +3,7 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
 import { Redirect } from 'react-router-dom';
+import userFactory from '../scripts/userFactory';
 
 const SignUp = (props) => {
 
@@ -23,9 +24,21 @@ const SignUp = (props) => {
     })
   };
 
+  const checkCharacters = (e) => {
+    const warning = document.querySelector('.warning');
+    const button = document.querySelector('.submit-btn');
+    if (e.target.value.includes(' ')) {
+      warning.textContent = 'Username cannot contain spaces';// Not supposed to manipulate DOM
+      button.disabled = true;
+    } else {
+      warning.textContent = '';
+      button.disabled = false;
+    };
+  };
+
   const makeAccount = (e) => {
     e.preventDefault();
-    const form = document.querySelector('.sign-up-form');
+    const form = e.target;
     const displayName = form[0].value;
     const email = form[1].value;
     const password = form[2].value;
@@ -42,39 +55,39 @@ const SignUp = (props) => {
             });
           }).catch((error) => {
             const warning = form.querySelector('.warning');
-            warning.textContent = error.message;
+            warning.textContent = error.message;// Not supposed to manipulate dom
           }).then(() => {
-              firebase.firestore().collection('users').doc(displayName).set({
-                displayName: displayName,
-                email: email,
-                groups: [],
-                likes: [],
-                hates: []
-              });
+            const newUser = userFactory(displayName, email);
+            props.setUserRef(newUser);/// NOT WORKING (sometimes)
+            firebase.firestore().collection('users').doc(displayName).set(
+              newUser
+            );
           }).then(() => {
             firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION);
-            }).catch(function(error) {
-              console.log(error);
-            });
+          }).catch(function (error) {
+            console.log(error);
+          });
       } else {
-        const warning = form.querySelector('.warning');
+        const warning = form.querySelector('.warning');// Not supposed to manipulate DOM
         warning.textContent = 'User name already exists';
       };
-    });  
+    });
   };
   
   return (
     <form className='sign-up-form' onSubmit={makeAccount}>
       <p className='warning'></p>
       <label>Display Name</label>
-      <input name='displayName' type='text' required />
+      <input onChange={checkCharacters} name='displayName' type='text' required />
       <label>Email</label>
       <input name='email' type='email' required />
       <label>Password</label>
       <input name='password' type='password' minLength='6' required/>
-      <button className='btn' type='submit'>Create Account</button>
+      <button className='submit-btn btn' type='submit'>Create Account</button>
     </form>
   );
 };
 
 export default SignUp;
+
+// When first signed up, cannot upvote / downvote (sometimes)
