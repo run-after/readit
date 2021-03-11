@@ -17,6 +17,7 @@ const Post = (props) => {
   const [likes, setLikes] = useState(props.post.likes);
   const [liked, setLiked] = useState(false);
   const [hated, setHated] = useState(false);
+  const [shouldDisplayComments, setShouldDisplayComments] = useState(false);
 
   const UpVote = () => {
     if (props.user && !props.userRef.likes.includes(props.id)) {
@@ -70,16 +71,8 @@ const Post = (props) => {
     };
   };
 
-  // Can change this so you don't change style, just set state and rerender
-  // if button clicked
-  const displayComments = (e) => {
-    const post = e.target.parentNode.parentNode;
-    const comments = post.querySelector('.comments');
-    if (comments.style.display === 'flex') {
-        comments.style = 'display: none';
-      } else {
-        comments.style = 'display: flex';
-      };
+  const displayComments = () => {
+    setShouldDisplayComments(!shouldDisplayComments);
   };
 
   const createNewComment = (e) => {
@@ -153,21 +146,20 @@ const Post = (props) => {
         <div className='post-footer'>
           <button onClick={displayComments}>{Object.keys(comments).length} comments</button>
         </div>
-        <div className='comments'>
-          {
-            props.user && 
-            <form className='comment-form' onSubmit={createNewComment}>
-              <textarea placeholder='Your thoughts...' />
-              <button className='submit-comment'>Save</button>
-            </form>
-          }
-          
-          {
-            Object.keys(comments).map((key) => {
-              return <Comment key={key} comment={comments[key]} id={key} user={props.user} userRef={props.userRef} />
-            })
-          }
-        </div>
+        {
+          shouldDisplayComments && props.user &&
+          <div className='comments'>
+              <form className='comment-form' onSubmit={createNewComment}>
+                <textarea required placeholder='Your thoughts...' />
+                <button className='submit-comment'>Save</button>
+              </form>            
+            {
+              Object.keys(comments).map((key) => {
+                return <Comment key={key} comment={comments[key]} id={key} user={props.user} userRef={props.userRef} />
+              })
+            }
+          </div>
+        }
       </div>  
     </div>
   );
