@@ -6,11 +6,13 @@ import 'firebase/firestore';
 import Post from './Post';
 import Comment from './Comment';
 
-const User = () => {
+const User = (props) => {
 
   const [doesUserExist, setDoesUserExist] = useState(false);
   const [userPosts, setUserPosts] = useState({});
   const [userComments, setUserComments] = useState({});
+  const [postPoints, setPostPoints] = useState(0);
+  const [commentPoints, setCommentPoints] = useState(0);
 
   const { name } = useParams();
   
@@ -30,6 +32,7 @@ const User = () => {
       querySnapShot.docs.forEach((value) => {
         if (value.data().user === name) {
           tempPosts[value.id] = value.data();
+          setPostPoints(p=> p + value.data().likes);
         };
       });
       setUserPosts(tempPosts);
@@ -41,6 +44,7 @@ const User = () => {
       querySnapShot.docs.forEach((value) => {
         if (value.data().user === name) {
           tempComments[value.id] = value.data();
+          setCommentPoints(c => c + value.data().likes);
         };
       });
       setUserComments(tempComments);
@@ -54,8 +58,8 @@ const User = () => {
         <div className='user'>
           <div className='image-placeholder'></div>
           <p className='user-name'>{name}</p>
-          <p className='post-points'>Post points: (This will come from DB)</p>
-          <p className='comment-points'>Comment points: (This will also come from DB)</p> 
+          <p className='post-points'>Post points: {postPoints}</p>
+          <p className='comment-points'>Comment points: {commentPoints}</p> 
         </div>
       }
       {
@@ -63,15 +67,19 @@ const User = () => {
       }
       <div className='feed'>
         Posts:
+        <div className='add-post'>
+          <button className='text-post-btn'>Add text post</button>
+          <button className='photo-post-btn'>Add photo post</button>
+        </div>
         {
           Object.keys(userPosts).map((key) => {
-            return <Post key={userPosts[key].title} post={userPosts[key]} />
+            return <Post key={key} post={userPosts[key]} id={key} user={props.user} userRef={props.userRef}/>
           })
         }
         Comments:
         {
           Object.keys(userComments).map((key) => {
-            return <Comment key={key} comment={userComments[key]} />
+            return <Comment key={key} comment={userComments[key]} id={key} user={props.user} userRef={props.userRef} />
           })
         }
       </div>
@@ -80,3 +88,6 @@ const User = () => {
 };
 
 export default User;
+
+// If I like a comment in comment section.. it doesn't show on comment in post (not a huge deal)
+// Make post buttons work
