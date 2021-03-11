@@ -33,7 +33,7 @@
 }
 
 .post-form {
-  display: none; /*flex*/
+  display: flex;
   flex-direction: column;
   justify-content: space-between;
   position: fixed;

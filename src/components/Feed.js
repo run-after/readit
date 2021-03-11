@@ -11,24 +11,19 @@ const Feed = (props) => {
 
   const [posts, setPosts] = useState({});
   const [groups, setGroups] = useState({ content: [] });
+  const [shouldDisplayForm, setShouldDisplayForm] = useState(false);
 
-  //GET RID OF
-  const showPostForm = () => {
-    const postForm = document.querySelector('.post-form');
-    postForm.style = 'display: flex;';
-  };
-  //GET RID OF
-  const hidePostForm = () => {
-    const form = document.querySelector('.post-form');
-    form.style = 'display: none;';
-    form[0].value = '';
-    form[1].value = '';
-    form[2].value = '';
+  const displayForm = () => {
+    setShouldDisplayForm(true);
   };
 
-  // Might want to add reference to user object under posts?
+  const doNotDisplayForm = () => {
+    setShouldDisplayForm(false);
+  };
+
   const createNewPost = (e) => {
     e.preventDefault();
+    setShouldDisplayForm(false);
     const form = e.target;
     const newPost = postFactory(props.user.displayName, form[0].value, form[1].value, form[2].value)
     let id;
@@ -40,7 +35,6 @@ const Feed = (props) => {
         [id]: newPost
       }));
     });
-    hidePostForm();
   };
  
   useEffect(() => {
@@ -84,32 +78,33 @@ const Feed = (props) => {
       <div className='right-column'>
         {
           props.user &&
-          <button onClick={showPostForm}className='add-post-btn'>Submit new text post</button>                 
+          <button onClick={displayForm}className='add-post-btn'>Submit new text post</button>                 
         }
         {
           props.user &&
           <button className='add-post-btn'>Submit new image post</button>
         }
       </div>
-      {/* maybe a component? */}
-      <form className='post-form' onSubmit={createNewPost}>
-        <input placeholder='Enter your title' />
-        <textarea className='content' placeholder='Enter your content' />
-        <select required name='groups'>
-          <option value=''>--Choose a group</option>
-          {
-            (props.group && <option value={props.group}>{props.group}</option>) ||
-            (
-              groups.content.map((group) => {
-                return <option key={group} value={group}>{group}</option>
-              })
-            )
-          }
-        </select>
-        <button>submit</button>
-        <button className='close-form' onClick={hidePostForm}>x</button>
-      </form>
-    
+      {
+        shouldDisplayForm &&
+        <form className='post-form' onSubmit={createNewPost}>
+          <input placeholder='Enter your title' />
+          <textarea className='content' placeholder='Enter your content' />
+          <select required name='groups'>
+            <option value=''>--Choose a group</option>
+            {
+              (props.group && <option value={props.group}>{props.group}</option>) ||
+              (
+                groups.content.map((group) => {
+                  return <option key={group} value={group}>{group}</option>
+                })
+              )
+            }
+          </select>
+          <button>Submit</button>
+          <button className='close-form' onClick={doNotDisplayForm}>x</button>
+        </form>
+      }
     </div>
   );
 };
@@ -117,9 +112,6 @@ const Feed = (props) => {
 export default Feed;
 
 /*
-- Might want to add a reference to user object in DB of post after post is created
 - Show all posts unless user is logged in - then only show groups subscribed to
-- Make a dropdown so they can select what group to view (or maybe that will just  be a group page)
-- Check why so many renders
-- remove post-form like it is. Make it more like groups page form
+- Check why so many renders ( i think its because of how man posts/comments are rendered)
 */
