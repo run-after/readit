@@ -35,7 +35,7 @@ console.log(userRef)
   return (
     <div className="App">
       <BrowserRouter>
-        <Header user={user} setUser={setUser} />
+        <Header user={user} setUser={setUser} userRef={userRef}/>
         <Switch>
           <Route exact path='/' render={() => <Feed user={user} userRef={userRef} />} />
           <Route exact path='/login' render={() => <Login user={user} setUser={setUser} />} />
@@ -52,7 +52,8 @@ console.log(userRef)
 export default App;
 
 /*
-  When joining groups, it doesn't display straight away on header... Have to refresh
+
+  Work to be done in Group.js
 
   Make unfound route go to 404
 
