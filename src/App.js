@@ -42,7 +42,7 @@ console.log(userRef)
           <Route exact path='/signup' render={() => <SignUp user={user} setUser={setUser} setUserRef={setUserRef} />} />
           <Route exact path='/user/:name' render={() => <User user={user} userRef={userRef} />} />
           <Route exact path='/groups/:group' render={() => <Group user={user} />} />
-          <Route exact path='/groups' render={() => <Groups user={user} />} />
+          <Route exact path='/groups' render={() => <Groups user={user} setUserRef={setUserRef} />} />
         </Switch>
       </BrowserRouter>
     </div>
@@ -52,17 +52,15 @@ console.log(userRef)
 export default App;
 
 /*
-  session storage is deleting likes / hates from DB
-
   When joining groups, it doesn't display straight away on header... Have to refresh
 
   Make unfound route go to 404
 
-  Button on right margin to make new pic post doesn't work
+  Button on right margin of Feed to make new pic post doesn't work
+
+  Remove link from Header with name. When on a different user page, it doesn't update info
 
   Maybe move group list from header to right margin to fill space???
 
   Maybe, when first making a post or a comment, it's upvoted by you right away
-
-  Remove link from Header with name. When on a different user page, it doesn't update info
 */
