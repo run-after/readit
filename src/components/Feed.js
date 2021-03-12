@@ -40,22 +40,31 @@ const Feed = (props) => {
   useEffect(() => {
     db.collection('posts').get().then((querySnapShot) => {
       let tempPosts = {};
-      // Check if in a group page, and only display those
       if (props.group) {
-        querySnapShot.docs.forEach((value) => {
-          if (value.data().group === props.group) {
-            tempPosts[value.id] = value.data();  
-          };
-        }); 
-        // if not, display all posts
+        // If group page is all, show all posts
+        if (props.group === 'all') {
+          querySnapShot.docs.forEach((value) => {
+            tempPosts[value.id] = value.data();
+          });
+          // Check if in a group page, and only display those
+        } else {
+          querySnapShot.docs.forEach((value) => {
+            if (value.data().group === props.group) {
+              tempPosts[value.id] = value.data();  
+            };
+          }); 
+        };
+        // else show only subs user is subscribed to
       } else {
-        querySnapShot.docs.forEach((value) => {
-          tempPosts[value.id] = value.data();
-        });  
+        // if user is not signed in
+        if (!props.user) {
+          querySnapShot.docs.forEach((value) => {
+            tempPosts[value.id] = value.data();
+          });
+        };
       };
       setPosts(tempPosts);
     });
-
     // Get all groups from DB
     db.collection('groups').get().then((querySnapShot) => {
       let tempGroups = [];
@@ -64,7 +73,22 @@ const Feed = (props) => {
       });
       setGroups({ content: tempGroups });
   })
-  }, [db, props.group]);
+  }, [db, props.group, props.user]);
+
+  useEffect(() => {
+    if (props.userRef) {
+      db.collection('posts').get().then((querySnapShot) => {
+        let tempPosts = {};
+        querySnapShot.forEach(x => {
+          if (props.userRef.groups.includes(x.data().group)) {
+            tempPosts[x.id] = x.data();
+          };
+        });
+        setPosts(tempPosts);
+      });
+    };
+    
+    }, [db, props.userRef])
 
   return (
     <div className='container'>
@@ -112,6 +136,5 @@ const Feed = (props) => {
 export default Feed;
 
 /*
-- Show all posts unless user is logged in - then only show groups subscribed to
 - Check why so many renders ( i think its because of how man posts/comments are rendered)
 */
