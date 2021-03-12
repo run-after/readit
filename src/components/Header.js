@@ -16,29 +16,27 @@ const Header = (props) => {
       window.location.reload();
     });
   };
+  
   useEffect(() => {
     firebase.firestore().collection('groups').get().then((querySnapShot) => {
-      let tempGroups = [];
-      if (props.user) {
-        firebase.firestore().collection('users').doc(props.user.displayName).get().then((doc) => {
-          tempGroups = doc.data().groups;
-        }).then(() => {
-          setGroups({ names: tempGroups });
-        });
+      if (props.userRef) {
+        setGroups({ names: props.userRef.groups });
       } else {
+        let tempGroups = [];
         querySnapShot.forEach((x) => {
           tempGroups.push(x.id);
         });
         setGroups({names: tempGroups})
       };
     })
-  }, [props.user]);
+  }, [props.user, props.userRef]);
   
   return (
     <div className='header'>
       <div className='group-list'>
         <span className='my-groups'>MY GROUPS: </span>
         <div className='groups'>
+          <Link to='/groups/all'>ALL</Link>
           {groups.names.map((name) => {
           return <Link key={`header${name}`}to={`/groups/${name}`}>{name.toUpperCase()}</Link>
         })}
