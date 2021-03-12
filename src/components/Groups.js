@@ -17,11 +17,17 @@ const Groups = (props) => {
       const tempUserGroups = userGroups.groups;
       tempUserGroups.push(groupName);
       setUserGroups({ groups: tempUserGroups });
-      firebase.firestore().collection('users').doc(props.user.displayName).set({
+      let tempUser = {
         email: userRef.email,
         displayName: userRef.displayName,
-        groups: tempUserGroups
-      });  
+        groups: tempUserGroups,
+        likes: userRef.likes,
+        hates: userRef.hates
+      };
+      firebase.firestore().collection('users').doc(props.user.displayName).set(
+        tempUser
+      );
+      props.setUserRef(tempUser);
     } else {
       alert('sign in first');// TEMP
     };
@@ -33,11 +39,17 @@ const Groups = (props) => {
       let tempUserGroups = userGroups.groups;
       tempUserGroups = tempUserGroups.filter((group) => { return group !== groupName })
       setUserGroups({ groups: tempUserGroups });
-      firebase.firestore().collection('users').doc(props.user.displayName).set({
+      let tempUser = {
         email: userRef.email,
         displayName: userRef.displayName,
-        groups: tempUserGroups
-      });
+        groups: tempUserGroups,
+        likes: userRef.likes,
+        hates: userRef.hates
+      };
+      firebase.firestore().collection('users').doc(props.user.displayName).set(
+        tempUser
+      );
+      props.setUserRef(tempUser);
     } else {
       alert('sign in first');// TEMP
     }
@@ -109,7 +121,6 @@ const Groups = (props) => {
                     {groups[key].description}
                   </div>
                 </li>
-              
               );
             })
           }
