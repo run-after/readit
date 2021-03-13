@@ -1,4 +1,18 @@
 .group .page-title {
-  margin: 75px 0 -35px 20px;
+  margin: 75px 0 0 20px;
   font-size: 2em;
+}
+
+.group .container {
+  margin-top: 10px;
+}
+
+.group .join-group-btn {
+  margin: 10px 0 0 20px;
+  color: white;
+  cursor: pointer;
+}
+
+.group .join-group-btn:hover {
+  opacity: 0.5;
 }
