@@ -79,7 +79,3 @@ export default Group;
 
 // Get list of groups, if the goup doesn't exist, should have a 404 type
 // page.
-
-// Add a button to subscribe to group
-
-// Button isn't clickable
