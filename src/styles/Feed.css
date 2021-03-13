@@ -4,6 +4,10 @@
   width: 100%;
 }
 
+.spacer {
+  margin-top: 75px;
+}
+
 .right-column {
   display: flex;
   flex-direction: column;
@@ -13,7 +17,6 @@
 }
 
 .feed {
-  margin-top: 75px;
   width: 75%;
   display: flex;
   flex-direction: column;

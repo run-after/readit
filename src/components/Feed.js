@@ -92,7 +92,9 @@ const Feed = (props) => {
 
   return (
     <div className='container'>
+      
       <div className='feed'>
+        <div className='spacer'></div>
         {
           Object.keys(posts).map((key) => {
             return <Post key={key} post={posts[key]} id={key} user={props.user} userRef={props.userRef}/>
@@ -137,4 +139,8 @@ export default Feed;
 
 /*
 - Check why so many renders ( i think its because of how man posts/comments are rendered)
+
+- What if user isn't subscribed to any groups
+
+Button on right margin of Feed to make new pic post doesn't work
 */
