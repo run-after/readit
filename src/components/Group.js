@@ -70,7 +70,7 @@ const Group = (props) => {
           <button className='leave-group-btn' onClick={leaveGroup}>Leave</button>) ||
           <button className='join-group-btn' onClick={joinGroup}>Join</button>
       }
-      <Feed user={props.user} group={group} />
+      <Feed user={props.user} group={group} userRef={props.userRef}/>
     </div>
   );
 };
