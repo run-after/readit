@@ -23,7 +23,7 @@ function App() {
 
   const [user, setUser] = useState(initialUser);
   const [userRef, setUserRef] = useState(null);
-console.log(userRef)
+  console.log(userRef)
   useEffect(() => {
     if (user) {
       firebase.firestore().collection('users').doc(user.displayName).get().then((doc) => {
@@ -41,7 +41,7 @@ console.log(userRef)
           <Route exact path='/login' render={() => <Login user={user} setUser={setUser} />} />
           <Route exact path='/signup' render={() => <SignUp user={user} setUser={setUser} setUserRef={setUserRef} />} />
           <Route exact path='/user/:name' render={() => <User user={user} userRef={userRef} />} />
-          <Route exact path='/groups/:group' render={() => <Group user={user} />} />
+          <Route exact path='/groups/:group' render={() => <Group user={user} userRef={userRef}/>} />
           <Route exact path='/groups' render={() => <Groups user={user} setUserRef={setUserRef} />} />
         </Switch>
       </BrowserRouter>

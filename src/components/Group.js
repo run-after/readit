@@ -56,19 +56,20 @@ const Group = (props) => {
   };
 
   useEffect(() => {
-      if (props.userRef) {
+    if (props.userRef) {
         setUserGroups(props.userRef.groups)  
       };  
-    
+      
   }, [props.userRef])
   
   return (
     <div className='group'>
       <h1 className='page-title'>{group}</h1>
       {
-        (userGroups.includes(group) &&
+        group !== 'all' &&
+        ((userGroups.includes(group) &&
           <button className='leave-group-btn' onClick={leaveGroup}>Leave</button>) ||
-          <button className='join-group-btn' onClick={joinGroup}>Join</button>
+          <button className='join-group-btn' onClick={joinGroup}>Join</button>)
       }
       <Feed user={props.user} group={group} userRef={props.userRef}/>
     </div>
