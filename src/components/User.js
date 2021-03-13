@@ -66,11 +66,7 @@ const User = (props) => {
         !doesUserExist && <div className='user'>Does not exist</div>
       }
       <div className='feed'>
-        Posts:
-        <div className='add-post'>
-          <button className='text-post-btn'>Add text post</button>
-          <button className='photo-post-btn'>Add photo post</button>
-        </div>
+        <div>Posts:</div>
         {
           Object.keys(userPosts).map((key) => {
             return <Post key={key} post={userPosts[key]} id={key} user={props.user} userRef={props.userRef}/>
@@ -90,4 +86,3 @@ const User = (props) => {
 export default User;
 
 // If I like a comment in comment section.. it doesn't show on comment in post (not a huge deal)
-// Make post buttons work
