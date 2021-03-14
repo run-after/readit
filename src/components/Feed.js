@@ -31,7 +31,7 @@ const Feed = (props) => {
       id = doc.id;
       // The below .then needs to be changed. If i make a new post and am not subscribed to the group, it should not show up
     }).then(() => {
-      setPosts(prevState => ({
+      props.setAllPosts(prevState => ({
         ...prevState,
         [id]: newPost
       }));
@@ -122,6 +122,8 @@ export default Feed;
 
 /*
 - line 33 (create new post method)
+
+- options for creating a new post when in group all, only lets you select group all
 
 - Check why so many renders ( i think its because of how man posts/comments are rendered)
 
