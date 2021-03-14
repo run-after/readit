@@ -71,12 +71,9 @@ const Group = (props) => {
           <button className='leave-group-btn' onClick={leaveGroup}>Leave</button>) ||
           <button className='join-group-btn' onClick={joinGroup}>Join</button>)
       }
-      <Feed user={props.user} group={group} userRef={props.userRef}/>
+      <Feed user={props.user} group={group} userRef={props.userRef} groups={props.groups} posts={props.posts}/>
     </div>
   );
 };
 
 export default Group;
-
-// Get list of groups, if the goup doesn't exist, should have a 404 type
-// page.
