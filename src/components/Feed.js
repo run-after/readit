@@ -10,7 +10,7 @@ const Feed = (props) => {
   const db = firebase.firestore();
 
   const [posts, setPosts] = useState({});
-  const [groups, setGroups] = useState({ content: [] });
+  const [groups, setGroups] = useState({content: []});
   const [shouldDisplayForm, setShouldDisplayForm] = useState(false);
 
   const displayForm = () => {
@@ -25,10 +25,11 @@ const Feed = (props) => {
     e.preventDefault();
     setShouldDisplayForm(false);
     const form = e.target;
-    const newPost = postFactory(props.user.displayName, form[0].value, form[1].value, form[2].value)
+    const newPost = postFactory(props.userRef.displayName, form[0].value, form[1].value, form[2].value);
     let id;
     db.collection('posts').add(newPost).then((doc) => {
       id = doc.id;
+      // The below .then needs to be changed. If i make a new post and am not subscribed to the group, it should not show up
     }).then(() => {
       setPosts(prevState => ({
         ...prevState,
@@ -37,75 +38,59 @@ const Feed = (props) => {
     });
   };
  
+  // This works. Is kind of ugly, but working for now.
   useEffect(() => {
-    db.collection('posts').get().then((querySnapShot) => {
+    if (props.posts) {
       let tempPosts = {};
       if (props.group) {
-        // If group page is all, show all posts
         if (props.group === 'all') {
-          querySnapShot.docs.forEach((value) => {
-            tempPosts[value.id] = value.data();
+          Object.keys(props.posts).forEach((key) => {
+            tempPosts[key] = props.posts[key];
           });
-          // Check if in a group page, and only display those
         } else {
-          querySnapShot.docs.forEach((value) => {
-            if (value.data().group === props.group) {
-              tempPosts[value.id] = value.data();  
+          Object.keys(props.posts).forEach(key => {
+            if (props.posts[key].group === props.group) {
+              tempPosts[key] = props.posts[key];
             };
-          }); 
+          });
         };
-        // else show only subs user is subscribed to
       } else {
-        // if user is not signed in
-        if (!props.user) {
-          querySnapShot.docs.forEach((value) => {
-            tempPosts[value.id] = value.data();
+        if (!props.userRef) {
+          Object.keys(props.posts).forEach(key => {
+            tempPosts[key] = props.posts[key];
+          });
+        } else {
+          Object.keys(props.posts).forEach(key => {
+            if (props.userRef.groups.includes(props.posts[key].group)) {
+              tempPosts[key] = props.posts[key];
+            };
           });
         };
       };
       setPosts(tempPosts);
-    });
-    // Get all groups from DB
-    db.collection('groups').get().then((querySnapShot) => {
-      let tempGroups = [];
-      querySnapShot.forEach(x => {
-        tempGroups.push(x.id);
-      });
-      setGroups({ content: tempGroups });
-  })
-  }, [db, props.group, props.user]);
-
-  useEffect(() => {
-    if (props.userRef) {
-      db.collection('posts').get().then((querySnapShot) => {
-        let tempPosts = {};
-        querySnapShot.forEach(x => {
-          if (props.userRef.groups.includes(x.data().group)) {
-            tempPosts[x.id] = x.data();
-          };
-        });
-        setPosts(tempPosts);
-      });
     };
-    
-    }, [db, props.userRef])
+
+    if (props.groups) {
+      setGroups({content: props.groups});
+    };
+  }, [props.posts, props.group, props.userRef, props.groups]);  
 
   return (
     <div className='container'>
       <div className='feed'>
         {
           Object.keys(posts).map((key) => {
-            return <Post key={key} post={posts[key]} id={key} user={props.user} userRef={props.userRef}/>
+            return <Post key={key} post={posts[key]} id={key} user={props.userRef} userRef={props.userRef}/>
           })
         }
       </div>
       <div className='right-column'>
         {
-          props.user &&
+          props.userRef &&
           <button onClick={displayForm}className='add-post-btn'>Submit new text post</button>                 
         }
         {
-          props.user &&
+          props.userRef &&
           <button className='add-post-btn'>Submit new image post</button>
         }
       </div>
@@ -136,6 +121,8 @@ const Feed = (props) => {
 export default Feed;
 
 /*
+- line 33 (create new post method)
+
 - Check why so many renders ( i think its because of how man posts/comments are rendered)
 
 - What if user isn't subscribed to any groups
