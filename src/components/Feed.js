@@ -29,7 +29,6 @@ const Feed = (props) => {
     let id;
     db.collection('posts').add(newPost).then((doc) => {
       id = doc.id;
-      // The below .then needs to be changed. If i make a new post and am not subscribed to the group, it should not show up
     }).then(() => {
       props.setAllPosts(prevState => ({
         ...prevState,
@@ -102,12 +101,13 @@ const Feed = (props) => {
           <select required name='groups'>
             <option value=''>--Choose a group</option>
             {
-              (props.group && <option value={props.group}>{props.group}</option>) ||
+              ((!props.group || props.group === 'all') &&
               (
                 groups.content.map((group) => {
                   return <option key={group} value={group}>{group}</option>
                 })
-              )
+              )) ||
+              <option value={props.group}>{props.group}</option>
             }
           </select>
           <button>Submit</button>
@@ -121,10 +121,6 @@ const Feed = (props) => {
 export default Feed;
 
 /*
-- line 33 (create new post method)
-
-- options for creating a new post when in group all, only lets you select group all
-
 - Check why so many renders ( i think its because of how man posts/comments are rendered)
 
 - What if user isn't subscribed to any groups
