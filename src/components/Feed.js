@@ -10,7 +10,7 @@ const Feed = (props) => {
   const db = firebase.firestore();
 
   const [posts, setPosts] = useState({});
-  const [groups, setGroups] = useState({content: []});
+  const [groups] = useState({content: props.groups});
   const [shouldDisplayForm, setShouldDisplayForm] = useState(false);
 
   const displayForm = () => {
@@ -39,39 +39,35 @@ const Feed = (props) => {
  
   // This works. Is kind of ugly, but working for now.
   useEffect(() => {
-    if (props.posts) {
-      let tempPosts = {};
-      if (props.group) {
-        if (props.group === 'all') {
-          Object.keys(props.posts).forEach((key) => {
-            tempPosts[key] = props.posts[key];
-          });
-        } else {
-          Object.keys(props.posts).forEach(key => {
-            if (props.posts[key].group === props.group) {
-              tempPosts[key] = props.posts[key];
-            };
-          });
-        };
+    
+    let tempPosts = {};
+    if (props.group) {
+      if (props.group === 'all') {
+        Object.keys(props.posts).forEach((key) => {
+          tempPosts[key] = props.posts[key];
+        });
       } else {
-        if (!props.userRef) {
-          Object.keys(props.posts).forEach(key => {
+        Object.keys(props.posts).forEach(key => {
+          if (props.posts[key].group === props.group) {
             tempPosts[key] = props.posts[key];
-          });
-        } else {
-          Object.keys(props.posts).forEach(key => {
-            if (props.userRef.groups.includes(props.posts[key].group)) {
-              tempPosts[key] = props.posts[key];
-            };
-          });
-        };
+          };
+        });
       };
-      setPosts(tempPosts);
+    } else {
+      if (!props.userRef) {
+        Object.keys(props.posts).forEach(key => {
+          tempPosts[key] = props.posts[key];
+        });
+      } else {
+        Object.keys(props.posts).forEach(key => {
+          if (props.userRef.groups.includes(props.posts[key].group)) {
+            tempPosts[key] = props.posts[key];
+          };
+        });
+      };
     };
+    setPosts(tempPosts);
 
-    if (props.groups) {
-      setGroups({content: props.groups});
-    };
   }, [props.posts, props.group, props.userRef, props.groups]);  
 
   return (
