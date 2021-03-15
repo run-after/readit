@@ -71,7 +71,7 @@ const Post = (props) => {
     firebase.firestore().collection('comments').add(newComment).then((doc) => {
       id = doc.id;
     }).then(() => {
-      setComments(prevState => ({
+      props.setAllComments(prevState => ({
         ...prevState,
         [id]: newComment
       }));

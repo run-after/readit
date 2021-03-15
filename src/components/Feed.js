@@ -74,7 +74,7 @@ const Feed = (props) => {
       <div className='feed'>
         {
           Object.keys(posts).map((key) => {
-            return <Post key={key} post={posts[key]} id={key} userRef={props.userRef} allPosts={props.allPosts} allComments={props.allComments}/>
+            return <Post key={key} post={posts[key]} id={key} userRef={props.userRef} allPosts={props.allPosts} allComments={props.allComments} setAllComments={props.setAllComments} />
           })
         }
       </div>
@@ -116,6 +116,8 @@ const Feed = (props) => {
 export default Feed;
 
 /*
+- When not logged in, feed doesn't show all posts on reload
+
 - Check why so many renders ( i think its because of how man posts/comments are rendered)
 
 - What if user isn't subscribed to any groups
