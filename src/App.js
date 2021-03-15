@@ -11,7 +11,7 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 
-function App() {
+function App(props) {
 
   let initialUser;
 
@@ -23,9 +23,9 @@ function App() {
 
   const [user, setUser] = useState(initialUser);
   const [userRef, setUserRef] = useState(null);
-  const [allPosts, setAllPosts] = useState(null);
-  const [allGroups, setAllGroups] = useState(null);
-  const [allComments, setAllComments] = useState(null);
+  const [allPosts, setAllPosts] = useState(props.posts);
+  const [allGroups, setAllGroups] = useState(props.groups);
+  const [allComments, setAllComments] = useState(props.comments);
 
   useEffect(() => {
     if (user) {
@@ -34,36 +34,6 @@ function App() {
       });
     };
   }, [user]);
-
-  useEffect(() => {
-    // Get all posts
-    firebase.firestore().collection('posts').get().then((querySnapShot) => {
-      let tempPosts = {};
-      querySnapShot.forEach((x) => {
-        tempPosts[x.id] = x.data();
-      });
-      setAllPosts(tempPosts);
-    });
-
-    // Get all comments
-    firebase.firestore().collection('comments').get().then((querySnapShot) => {
-      let tempComments = {};
-      querySnapShot.forEach((x) => {
-        tempComments[x.id] = x.data();
-      });
-      setAllComments(tempComments);
-    });
-
-    // Get all groups (don't love the object structure)
-    firebase.firestore().collection('groups').get().then((querySnapShot) => {
-      let tempGroups = [];
-      querySnapShot.forEach((x) => {
-        tempGroups.push(x.id);
-      });
-      setAllGroups(tempGroups);
-    });
-
-  }, [])
 
   return (
     <div className="App">
@@ -74,7 +44,7 @@ function App() {
           <Route exact path='/login' render={() => <Login user={user} setUser={setUser} />} />
           <Route exact path='/signup' render={() => <SignUp user={user} setUser={setUser} setUserRef={setUserRef} />} />
           <Route exact path='/user/:name' render={() => <User user={user} userRef={userRef} />} />
-          <Route exact path='/groups/:group' render={() => <Group user={user} userRef={userRef} groups={allGroups} posts={allPosts}/>} />
+          <Route exact path='/groups/:group' render={() => <Group user={user} userRef={userRef} groups={allGroups} posts={allPosts} setAllPosts={setAllPosts}/>} />
           <Route exact path='/groups' render={() => <Groups user={user} setUserRef={setUserRef} />} />
         </Switch>
       </BrowserRouter>
