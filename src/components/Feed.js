@@ -6,11 +6,10 @@ import Post from './Post';
 import postFactory from '../scripts/postFactory';
 
 const Feed = (props) => {
-  
   const db = firebase.firestore();
 
   const [posts, setPosts] = useState({});
-  const [groups] = useState({content: props.groups});
+  const [groups] = useState({content: props.allGroups});
   const [shouldDisplayForm, setShouldDisplayForm] = useState(false);
 
   const displayForm = () => {
@@ -43,32 +42,32 @@ const Feed = (props) => {
     let tempPosts = {};
     if (props.group) {
       if (props.group === 'all') {
-        Object.keys(props.posts).forEach((key) => {
-          tempPosts[key] = props.posts[key];
+        Object.keys(props.allPosts).forEach((key) => {
+          tempPosts[key] = props.allPosts[key];
         });
       } else {
-        Object.keys(props.posts).forEach(key => {
-          if (props.posts[key].group === props.group) {
-            tempPosts[key] = props.posts[key];
+        Object.keys(props.allPosts).forEach(key => {
+          if (props.allPosts[key].group === props.group) {
+            tempPosts[key] = props.allPosts[key];
           };
         });
       };
     } else {
       if (!props.userRef) {
-        Object.keys(props.posts).forEach(key => {
-          tempPosts[key] = props.posts[key];
+        Object.keys(props.allPosts).forEach(key => {
+          tempPosts[key] = props.allPosts[key];
         });
       } else {
-        Object.keys(props.posts).forEach(key => {
-          if (props.userRef.groups.includes(props.posts[key].group)) {
-            tempPosts[key] = props.posts[key];
+        Object.keys(props.allPosts).forEach(key => {
+          if (props.userRef.groups.includes(props.allPosts[key].group)) {
+            tempPosts[key] = props.allPosts[key];
           };
         });
       };
     };
     setPosts(tempPosts);
 
-  }, [props.posts, props.group, props.userRef, props.groups]);  
+  }, [props.allPosts, props.group, props.userRef]);  
 
   return (
     <div className='container'>
