@@ -40,12 +40,12 @@ function App(props) {
       <BrowserRouter>
         <Header user={user} setUser={setUser} userRef={userRef}/>
         <Switch>
-          <Route exact path='/' render={() => <Feed userRef={userRef} posts={allPosts} setAllPosts={setAllPosts} groups={allGroups} />} />
+          <Route exact path='/' render={() => <Feed userRef={userRef} allPosts={allPosts} setAllPosts={setAllPosts} allGroups={allGroups} allComments={allComments}/>} />
           <Route exact path='/login' render={() => <Login user={user} setUser={setUser} />} />
           <Route exact path='/signup' render={() => <SignUp user={user} setUser={setUser} setUserRef={setUserRef} />} />
           <Route exact path='/user/:name' render={() => <User user={user} userRef={userRef} />} />
-          <Route exact path='/groups/:group' render={() => <Group user={user} userRef={userRef} groups={allGroups} posts={allPosts} setAllPosts={setAllPosts}/>} />
-          <Route exact path='/groups' render={() => <Groups user={user} setUserRef={setUserRef} />} />
+          <Route exact path='/groups/:group' render={() => <Group userRef={userRef} setUserRef={setUserRef} allGroups={allGroups} allPosts={allPosts} setAllPosts={setAllPosts} allComments={allComments}/>} />
+          <Route exact path='/groups' render={() => <Groups userRef={userRef} user={user} setUserRef={setUserRef} allGroups={allGroups} />} />
         </Switch>
       </BrowserRouter>
     </div>
