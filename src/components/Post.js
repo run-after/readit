@@ -141,7 +141,7 @@ const Post = (props) => {
               </form>            
             {
               Object.keys(comments).map((key) => {
-                return <Comment key={key} comment={comments[key]} id={key} user={props.user} userRef={props.userRef} />
+                return <Comment key={key} comment={comments[key]} id={key} userRef={props.userRef} />
               })
             }
           </div>
