@@ -21,25 +21,19 @@ const Comment = (props) => {
   
     if (props.userRef && !props.userRef.likes.includes(props.id)) {
       // find post in DB and up the score 1 point.
-      let tempComment;
-      firebase.firestore().collection('comments').doc(props.id).get().then((doc) => {
-        tempComment = doc.data();
-        tempComment.likes = likes + 1;
-      }).then(() => {
-        firebase.firestore().collection('comments').doc(props.id).set(
-          tempComment
-        );
-        setLikes(likes + 1);
-      });
+      let tempComment = props.allComments[props.id];
+      tempComment.likes = likes + 1;
+      firebase.firestore().collection('comments').doc(props.id)
+        .set(tempComment);
+      setLikes(likes + 1);
       // add like with ref to post
       const tempUser = props.userRef;
       tempUser.likes.push(props.id);
       if (tempUser.hates.includes(props.id)) {
         tempUser.hates = tempUser.hates.filter((x) => x !== props.id);
       };
-      firebase.firestore().collection('users').doc(props.userRef.displayName).set(
-        tempUser
-      );
+      firebase.firestore().collection('users').doc(props.userRef.displayName)
+        .set(tempUser);
       setLiked(true);
       setHated(false);
     };
@@ -47,24 +41,19 @@ const Comment = (props) => {
 
   const downVote = () => {
     if (props.userRef && !props.userRef.hates.includes(props.id)) {
-      let tempComment;
-      firebase.firestore().collection('comments').doc(props.id).get().then((doc) => {
-        tempComment = doc.data();
-        tempComment.likes = likes - 1;
-      }).then(() => {
-        firebase.firestore().collection('comments').doc(props.id).set(
-          tempComment
-        );
-        setLikes(likes - 1);
-      });
+      let tempComment = props.allComments[props.id];
+      tempComment.likes = likes - 1;
+      firebase.firestore().collection('comments').doc(props.id)
+        .set(tempComment);
+      setLikes(likes - 1);
+      // add hate with ref to post
       const tempUser = props.userRef;
       tempUser.hates.push(props.id);
       if (tempUser.likes.includes(props.id)) {
         tempUser.likes = tempUser.likes.filter((x) => x !== props.id);
       };
-      firebase.firestore().collection('users').doc(props.userRef.displayName).set(
-        tempUser
-      );
+      firebase.firestore().collection('users').doc(props.userRef.displayName)
+        .set(tempUser);
       setHated(true);
       setLiked(false);
     };
@@ -72,7 +61,8 @@ const Comment = (props) => {
 
   useEffect(() => {
     if (props.userRef) {
-      setLiked(props.userRef.likes.includes(props.id))
+      setLiked(props.userRef.likes.includes(props.id));
+      setHated(props.userRef.hates.includes(props.id));
     };
   }, [props.userRef, props.id]);
 
