@@ -19,7 +19,7 @@ const Comment = (props) => {
 
   const UpVote = () => {
   
-    if (props.user && !props.userRef.likes.includes(props.id)) {
+    if (props.userRef && !props.userRef.likes.includes(props.id)) {
       // find post in DB and up the score 1 point.
       let tempComment;
       firebase.firestore().collection('comments').doc(props.id).get().then((doc) => {
@@ -37,7 +37,7 @@ const Comment = (props) => {
       if (tempUser.hates.includes(props.id)) {
         tempUser.hates = tempUser.hates.filter((x) => x !== props.id);
       };
-      firebase.firestore().collection('users').doc(props.user.displayName).set(
+      firebase.firestore().collection('users').doc(props.userRef.displayName).set(
         tempUser
       );
       setLiked(true);
@@ -46,7 +46,7 @@ const Comment = (props) => {
   };
 
   const downVote = () => {
-    if (props.user && !props.userRef.hates.includes(props.id)) {
+    if (props.userRef && !props.userRef.hates.includes(props.id)) {
       let tempComment;
       firebase.firestore().collection('comments').doc(props.id).get().then((doc) => {
         tempComment = doc.data();
@@ -62,7 +62,7 @@ const Comment = (props) => {
       if (tempUser.likes.includes(props.id)) {
         tempUser.likes = tempUser.likes.filter((x) => x !== props.id);
       };
-      firebase.firestore().collection('users').doc(props.user.displayName).set(
+      firebase.firestore().collection('users').doc(props.userRef.displayName).set(
         tempUser
       );
       setHated(true);
