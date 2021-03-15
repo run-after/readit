@@ -20,52 +20,39 @@ const Post = (props) => {
   const [shouldDisplayComments, setShouldDisplayComments] = useState(false);
 
   const UpVote = () => {
-    if (props.user && !props.userRef.likes.includes(props.id)) {
-      // find post in DB and up the score 1 point.
-      let tempPost;
-      firebase.firestore().collection('posts').doc(props.id).get().then((doc) => {
-        tempPost = doc.data();
-        tempPost.likes = likes + 1;
-      }).then(() => {
-        firebase.firestore().collection('posts').doc(props.id).set(
-          tempPost
-        );
-        setLikes(likes + 1);
-      });
+    if (props.userRef && !props.userRef.likes.includes(props.id)) {
+      let tempPost = props.allPosts[props.id];
+      tempPost.likes = likes + 1;
+      firebase.firestore().collection('posts').doc(props.id)
+        .set(tempPost);
+      setLikes(likes + 1);
       // add like with ref to post
       const tempUser = props.userRef;
       tempUser.likes.push(props.id);
       if (tempUser.hates.includes(props.id)) {
         tempUser.hates = tempUser.hates.filter((x) => x !== props.id);
       };
-      firebase.firestore().collection('users').doc(props.user.displayName).set(
-        tempUser
-      );
+      firebase.firestore().collection('users').doc(props.userRef.displayName)
+        .set(tempUser);
       setLiked(true);
       setHated(false);
     };
   };
 
   const downVote = () => {
-    if (props.user && !props.userRef.hates.includes(props.id)) {
-      let tempPost;
-      firebase.firestore().collection('posts').doc(props.id).get().then((doc) => {
-        tempPost = doc.data();
-        tempPost.likes = likes - 1;
-      }).then(() => {
-        firebase.firestore().collection('posts').doc(props.id).set(
-          tempPost
-        );
+    if (props.userRef && !props.userRef.hates.includes(props.id)) {
+      let tempPost = props.allPosts[props.id];
+      tempPost.likes = likes - 1;
+      firebase.firestore().collection('posts').doc(props.id)
+        .set(tempPost);
         setLikes(likes - 1);
-      });
       const tempUser = props.userRef;
       tempUser.hates.push(props.id);
       if (tempUser.likes.includes(props.id)) {
         tempUser.likes = tempUser.likes.filter((x) => x !== props.id);
       };
-      firebase.firestore().collection('users').doc(props.user.displayName).set(
-        tempUser
-      );
+      firebase.firestore().collection('users').doc(props.userRef.displayName)
+        .set(tempUser);
       setHated(true);
       setLiked(false);
     };
@@ -78,7 +65,7 @@ const Post = (props) => {
   const createNewComment = (e) => {
     e.preventDefault();
     const form = e.target;
-    const newComment = commentFactory(props.user.displayName, form[0].value, props.id);
+    const newComment = commentFactory(props.userRef.displayName, form[0].value, props.id);
     let id;
     e.target.children[0].value = '';
     firebase.firestore().collection('comments').add(newComment).then((doc) => {
@@ -94,22 +81,21 @@ const Post = (props) => {
   const timeNow = new Date().getTime();
 
   useEffect(() => {
-    // Gets all comments associated with post and add to comments state    
-    firebase.firestore().collection('comments').get().then((querySnapShot) => {
-      querySnapShot.forEach((comment) => {
-        if (comment.data().post === props.id) {
-          setComments(prevState => ({
-            ...prevState,
-            [comment.id]: comment.data()
-          }))
-        };
-      });
+    
+    Object.keys(props.allComments).forEach(key => {
+      if (props.allComments[key].post === props.id) {
+        setComments(prevState => ({
+          ...prevState,
+          [key]: props.allComments[key]
+        }));
+      };
     });
 
     if (props.userRef) {
-      setLiked(props.userRef.likes.includes(props.id))
-    }
-  }, [props.id, props.userRef]);
+      setLiked(props.userRef.likes.includes(props.id));
+      setHated(props.userRef.hates.includes(props.id));
+    };
+  }, [props.id, props.userRef, props.allComments]);
 
   return (
     <div data-id={props.id} className='post'>
@@ -147,7 +133,7 @@ const Post = (props) => {
           <button onClick={displayComments}>{Object.keys(comments).length} comments</button>
         </div>
         {
-          shouldDisplayComments && props.user &&
+          shouldDisplayComments && props.userRef &&
           <div className='comments'>
               <form className='comment-form' onSubmit={createNewComment}>
                 <textarea required placeholder='Your thoughts...' />
