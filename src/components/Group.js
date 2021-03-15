@@ -71,7 +71,7 @@ const Group = (props) => {
           <button className='leave-group-btn' onClick={leaveGroup}>Leave</button>) ||
           <button className='join-group-btn' onClick={joinGroup}>Join</button>)
       }
-      <Feed user={props.user} group={group} userRef={props.userRef} groups={props.groups} posts={props.posts}/>
+      <Feed group={group} userRef={props.userRef} allGroups={props.allGroups} allPosts={props.allPosts} allComments={props.allComments}/>
     </div>
   );
 };
