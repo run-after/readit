@@ -6,27 +6,25 @@ import { Link } from 'react-router-dom';
 
 const Groups = (props) => {
 
-  const [groups, setGroups] = useState({});
+  const [groups, setGroups] = useState(props.allGroups);
   const [userGroups, setUserGroups] = useState({ groups: [] });
-  const [userRef, setUserRef] = useState({});
   const [shouldDisplayForm, setShouldDisplayForm] = useState(false);
   
   const joinGroup = (e) => {
-    if (props.user) {
+    if (props.userRef) {
       const groupName = e.target.parentNode.parentNode.dataset.name;
       const tempUserGroups = userGroups.groups;
       tempUserGroups.push(groupName);
       setUserGroups({ groups: tempUserGroups });
       let tempUser = {
-        email: userRef.email,
-        displayName: userRef.displayName,
+        email: props.userRef.email,
+        displayName: props.userRef.displayName,
         groups: tempUserGroups,
-        likes: userRef.likes,
-        hates: userRef.hates
+        likes: props.userRef.likes,
+        hates: props.userRef.hates
       };
-      firebase.firestore().collection('users').doc(props.user.displayName).set(
-        tempUser
-      );
+      firebase.firestore().collection('users').doc(props.userRef.displayName)
+        .set(tempUser);
       props.setUserRef(tempUser);
     } else {
       alert('sign in first');// TEMP
@@ -34,25 +32,24 @@ const Groups = (props) => {
   };
 
   const leaveGroup = (e) => {
-    if(props.user){
+    if(props.userRef){
       const groupName = e.target.parentNode.parentNode.dataset.name;
       let tempUserGroups = userGroups.groups;
       tempUserGroups = tempUserGroups.filter((group) => { return group !== groupName })
       setUserGroups({ groups: tempUserGroups });
       let tempUser = {
-        email: userRef.email,
-        displayName: userRef.displayName,
+        email: props.userRef.email,
+        displayName: props.userRef.displayName,
         groups: tempUserGroups,
-        likes: userRef.likes,
-        hates: userRef.hates
+        likes: props.userRef.likes,
+        hates: props.userRef.hates
       };
-      firebase.firestore().collection('users').doc(props.user.displayName).set(
-        tempUser
-      );
+      firebase.firestore().collection('users').doc(props.userRef.displayName)
+        .set(tempUser);
       props.setUserRef(tempUser);
     } else {
       alert('sign in first');// TEMP
-    }
+    };
   };
 
   const displayForm = () => {
@@ -81,22 +78,10 @@ const Groups = (props) => {
   };
 
   useEffect(() => {
-    // Get all groups from DB
-    firebase.firestore().collection('groups').get().then((querySnapSnot) => {
-      let tempGroups = {};
-      querySnapSnot.forEach((group) => {
-        tempGroups[group.id] = group.data();
-      });
-      setGroups(tempGroups);
-    });
-    // Get all groups user is subscribed to
-    if (props.user) {
-      firebase.firestore().collection('users').doc(props.user.displayName).get().then((doc) => {
-        setUserRef(doc.data());
-        setUserGroups({ groups: doc.data().groups });
-      });  
+    if (props.userRef) {
+      setUserGroups({ groups: props.userRef.groups });
     };
-  }, [props.user]);
+  }, [props.userRef]);
 
   return (
     <div className='groups-container'>
@@ -112,8 +97,8 @@ const Groups = (props) => {
                   <div className='group-header'>
                     {
                       (userGroups.groups.includes(key) &&
-                        <button className='leave-group-btn'onClick={leaveGroup}>Leave</button>) ||
-                        <button className='join-group-btn' onClick={joinGroup}>Join</button>
+                        <button className='leave-group-btn' onClick={leaveGroup}>Leave</button>) ||
+                      <button className='join-group-btn' onClick={joinGroup}>Join</button>
                     }
                     <Link to={`/groups/${key}`}>{key}</Link>
                   </div>
@@ -127,14 +112,14 @@ const Groups = (props) => {
         </ul>
         <div className='right-column'>
           {
-            props.user &&
-            <button className='create-group-btn' onClick={displayForm}>Create your own group</button>                 
+            props.userRef &&
+            <button className='create-group-btn' onClick={displayForm}>Create your own group</button>
           }
         </div>
       </div>
       {
         shouldDisplayForm &&
-        <form className='create-group-form' onSubmit={createGroup}> 
+        <form className='create-group-form' onSubmit={createGroup}>
           <h1>Create your group</h1>
           <div>
             <div className='warning'></div>
@@ -144,12 +129,12 @@ const Groups = (props) => {
           <div>
             <label>Group description</label>
             <textarea required minLength='5' maxLength='50' placeholder='Enter description' />
-          </div>        
+          </div>
           <button>submit</button>
         </form>
-        }
+      }
     </div>
-  )
+  );
 };
 
 export default Groups;
