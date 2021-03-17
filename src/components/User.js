@@ -26,30 +26,24 @@ const User = (props) => {
   });
 
   useEffect(() => {
-    // Lists posts made by user
-    firebase.firestore().collection('posts').get().then((querySnapShot) => {
-      let tempPosts = {};
-      querySnapShot.docs.forEach((value) => {
-        if (value.data().user === name) {
-          tempPosts[value.id] = value.data();
-          setPostPoints(p=> p + value.data().likes);
-        };
-      });
-      setUserPosts(tempPosts);
+    let tempPosts = {};
+    Object.keys(props.allPosts).forEach(key => {
+      if (props.allPosts[key].user === name) {
+        tempPosts[key] = props.allPosts[key];
+        setPostPoints(p => p + props.allPosts[key].likes);
+      };
     });
-
     // Lists all comments made by user
-    firebase.firestore().collection('comments').get().then((querySnapShot) => {
-      let tempComments = {};
-      querySnapShot.docs.forEach((value) => {
-        if (value.data().user === name) {
-          tempComments[value.id] = value.data();
-          setCommentPoints(c => c + value.data().likes);
-        };
-      });
-      setUserComments(tempComments);
+    let tempComments = {};
+    Object.keys(props.allComments).forEach(key => {
+      if (props.allComments[key].user === name) {
+        tempComments[key] = props.allComments[key];
+        setCommentPoints(c => c + props.allComments[key].likes);
+      };
     });
-  }, [name]);
+    setUserPosts(tempPosts);
+    setUserComments(tempComments);
+  }, [name, props.allPosts, props.allComments, props.userRef]);
 
   return (
     <div className='user-container'>
@@ -69,13 +63,13 @@ const User = (props) => {
         <div>Posts:</div>
         {
           Object.keys(userPosts).map((key) => {
-            return <Post key={key} post={userPosts[key]} id={key} user={props.user} userRef={props.userRef}/>
+            return <Post key={key} post={userPosts[key]} id={key} user={props.user} allComments={props.allComments} userRef={props.userRef}/>
           })
         }
         Comments:
         {
           Object.keys(userComments).map((key) => {
-            return <Comment key={key} comment={userComments[key]} id={key} user={props.user} userRef={props.userRef} />
+            return <Comment key={key} comment={userComments[key]} id={key} userRef={props.userRef} />
           })
         }
       </div>
