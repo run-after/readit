@@ -43,7 +43,7 @@ function App(props) {
           <Route exact path='/' render={() => <Feed userRef={userRef} allPosts={allPosts} setAllPosts={setAllPosts} allGroups={allGroups} allComments={allComments} setAllComments={setAllComments}/>} />
           <Route exact path='/login' render={() => <Login user={user} setUser={setUser} />} />
           <Route exact path='/signup' render={() => <SignUp user={user} setUser={setUser} setUserRef={setUserRef} />} />
-          <Route exact path='/user/:name' render={() => <User user={user} userRef={userRef} />} />
+          <Route exact path='/user/:name' render={() => <User userRef={userRef} allPosts={allPosts} allComments={allComments} />} />
           <Route exact path='/groups/:group' render={() => <Group userRef={userRef} setUserRef={setUserRef} allGroups={allGroups} allPosts={allPosts} setAllPosts={setAllPosts} allComments={allComments} setAllComments={setAllComments}/>} />
           <Route exact path='/groups' render={() => <Groups userRef={userRef} user={user} setUserRef={setUserRef} allGroups={allGroups} />} />
         </Switch>
@@ -66,7 +66,4 @@ export default App;
   Maybe move group list from header to right margin to fill space???
 
   Maybe, when first making a post or a comment, it's upvoted by you right away
-
-  Warning: Can't perform a React state update on an unmounted component. This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and asynchronous tasks in a useEffect cleanup function.
-  ^ To fix, try to move the post retrieving from feed to App. Then it only does it once.
 */
