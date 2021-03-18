@@ -46,9 +46,8 @@ const Group = (props) => {
         likes: props.userRef.likes,
         hates: props.userRef.hates
       };
-      firebase.firestore().collection('users').doc(props.user.displayName).set(
-        tempUser
-      );
+      firebase.firestore().collection('users').doc(props.userRef.displayName)
+        .set(tempUser);
       props.setUserRef(tempUser);
     } else {
       alert('sign in first');// TEMP
