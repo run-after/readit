@@ -21,13 +21,13 @@ const Post = (props) => {
 
   const UpVote = () => {
     if (props.userRef && !props.userRef.likes.includes(props.id)) {
-      let tempPost = props.allPosts[props.id];
+      let tempPost = JSON.parse(JSON.stringify(props.allPosts[props.id]));
       tempPost.likes = likes + 1;
       firebase.firestore().collection('posts').doc(props.id)
         .set(tempPost);
       setLikes(likes + 1);
       // add like with ref to post
-      const tempUser = props.userRef;
+      const tempUser = JSON.parse(JSON.stringify(props.userRef));
       tempUser.likes.push(props.id);
       if (tempUser.hates.includes(props.id)) {
         tempUser.hates = tempUser.hates.filter((x) => x !== props.id);
@@ -41,12 +41,12 @@ const Post = (props) => {
 
   const downVote = () => {
     if (props.userRef && !props.userRef.hates.includes(props.id)) {
-      let tempPost = props.allPosts[props.id];
+      let tempPost = JSON.parse(JSON.stringify(props.allPosts[props.id]));
       tempPost.likes = likes - 1;
       firebase.firestore().collection('posts').doc(props.id)
         .set(tempPost);
         setLikes(likes - 1);
-      const tempUser = props.userRef;
+      const tempUser = JSON.parse(JSON.stringify(props.userRef));
       tempUser.hates.push(props.id);
       if (tempUser.likes.includes(props.id)) {
         tempUser.likes = tempUser.likes.filter((x) => x !== props.id);
