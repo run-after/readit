@@ -40,12 +40,45 @@ function App(props) {
       <BrowserRouter>
         <Header user={user} setUser={setUser} userRef={userRef}/>
         <Switch>
-          <Route exact path='/' render={() => <Feed userRef={userRef} allPosts={allPosts} setAllPosts={setAllPosts} allGroups={allGroups} allComments={allComments} setAllComments={setAllComments}/>} />
-          <Route exact path='/login' render={() => <Login user={user} setUser={setUser} />} />
-          <Route exact path='/signup' render={() => <SignUp user={user} setUser={setUser} setUserRef={setUserRef} />} />
-          <Route exact path='/user/:name' render={() => <User userRef={userRef} allPosts={allPosts} allComments={allComments} />} />
-          <Route exact path='/groups/:group' render={() => <Group userRef={userRef} setUserRef={setUserRef} allGroups={allGroups} allPosts={allPosts} setAllPosts={setAllPosts} allComments={allComments} setAllComments={setAllComments}/>} />
-          <Route exact path='/groups' render={() => <Groups userRef={userRef} user={user} setUserRef={setUserRef} allGroups={allGroups} />} />
+          <Route exact path='/' render={() => <Feed
+            userRef={userRef}
+            allPosts={allPosts}
+            setAllPosts={setAllPosts}
+            allGroups={allGroups}
+            allComments={allComments}
+            setAllComments={setAllComments}
+          />} />
+          <Route exact path='/login' render={() => <Login
+            user={user}
+            setUser={setUser}
+          />} />
+          <Route exact path='/signup' render={() => <SignUp
+            user={user}
+            setUser={setUser}
+            setUserRef={setUserRef}
+          />} />
+          <Route exact path='/user/:name' render={() => <User
+            userRef={userRef}
+            setUserRef={setUserRef}
+            allPosts={allPosts}
+            setAllPosts={setAllPosts}
+            allComments={allComments}
+            setAllComments={setAllComments}
+          />} />
+          <Route exact path='/groups/:group' render={() => <Group
+            userRef={userRef}
+            setUserRef={setUserRef}
+            allGroups={allGroups}
+            allPosts={allPosts}
+            setAllPosts={setAllPosts}
+            allComments={allComments}
+            setAllComments={setAllComments}
+          />} />
+          <Route exact path='/groups' render={() => <Groups
+            userRef={userRef}
+            setUserRef={setUserRef}
+            allGroups={allGroups}
+          />} />
         </Switch>
       </BrowserRouter>
     </div>
