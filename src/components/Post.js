@@ -26,6 +26,12 @@ const Post = (props) => {
       firebase.firestore().collection('posts').doc(props.id)
         .set(tempPost);
       setLikes(likes + 1);
+
+      // This updates allPosts in App
+      let tempAllPosts = JSON.parse(JSON.stringify(props.allPosts));
+      tempAllPosts[props.id] = tempPost;
+      props.setAllPosts(tempAllPosts);
+
       // add like with ref to post
       const tempUser = JSON.parse(JSON.stringify(props.userRef));
       tempUser.likes.push(props.id);
@@ -36,6 +42,11 @@ const Post = (props) => {
         .set(tempUser);
       setLiked(true);
       setHated(false);
+      props.setUserRef(tempUser);
+      // setPostPoints is to update total points on user page
+      if (props.setPostPoints) {
+        props.setPostPoints(props.postPoints + 1);
+      };
     };
   };
 
@@ -45,16 +56,29 @@ const Post = (props) => {
       tempPost.likes = likes - 1;
       firebase.firestore().collection('posts').doc(props.id)
         .set(tempPost);
-        setLikes(likes - 1);
+      setLikes(likes - 1);
+
+      // This updates the allPosts in App
+      let tempAllPosts = JSON.parse(JSON.stringify(props.allPosts));
+      tempAllPosts[props.id] = tempPost;
+      props.setAllPosts(tempAllPosts);
+
+
       const tempUser = JSON.parse(JSON.stringify(props.userRef));
       tempUser.hates.push(props.id);
       if (tempUser.likes.includes(props.id)) {
         tempUser.likes = tempUser.likes.filter((x) => x !== props.id);
       };
+      props.setUserRef(tempUser);
       firebase.firestore().collection('users').doc(props.userRef.displayName)
         .set(tempUser);
       setHated(true);
       setLiked(false);
+      props.setUserRef(tempUser);
+      // setPostPoints is to update total points on user page
+      if (props.setPostPoints) {
+        props.setPostPoints(props.postPoints - 1);
+      };
     };
   };
 
@@ -141,7 +165,15 @@ const Post = (props) => {
               </form>            
             {
               Object.keys(comments).map((key) => {
-                return <Comment key={key} comment={comments[key]} id={key} userRef={props.userRef} allComments={props.allComments} />
+                return <Comment
+                  key={key}
+                  comment={comments[key]}
+                  id={key}
+                  userRef={props.userRef}
+                  setUserRef={props.setUserRef}
+                  allComments={props.allComments}
+                  setCommentPoints={props.setCommentPoints}
+                />
               })
             }
           </div>

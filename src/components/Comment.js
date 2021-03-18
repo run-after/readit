@@ -26,16 +26,27 @@ const Comment = (props) => {
       firebase.firestore().collection('comments').doc(props.id)
         .set(tempComment);
       setLikes(likes + 1);
+
+      // This updates allComments in App
+      let tempAllComments = JSON.parse(JSON.stringify(props.allComments));
+      tempAllComments[props.id] = tempComment;
+      props.setAllComments(tempAllComments);
+
       // add like with ref to post
       const tempUser = JSON.parse(JSON.stringify(props.userRef));
       tempUser.likes.push(props.id);
       if (tempUser.hates.includes(props.id)) {
         tempUser.hates = tempUser.hates.filter((x) => x !== props.id);
       };
+      props.setUserRef(tempUser);
       firebase.firestore().collection('users').doc(props.userRef.displayName)
         .set(tempUser);
       setLiked(true);
       setHated(false);
+      // setCommentPoints is to update total points on user page
+      if (props.setCommentPoints) {
+        props.setCommentPoints(props.commentPoints + 1);
+      };
     };
   };
 
@@ -46,16 +57,27 @@ const Comment = (props) => {
       firebase.firestore().collection('comments').doc(props.id)
         .set(tempComment);
       setLikes(likes - 1);
+
+      // This updates allComments in App
+      let tempAllComments = JSON.parse(JSON.stringify(props.allComments));
+      tempAllComments[props.id] = tempComment;
+      props.setAllComments(tempAllComments);
+
       // add hate with ref to post
       const tempUser = JSON.parse(JSON.stringify(props.userRef));
       tempUser.hates.push(props.id);
       if (tempUser.likes.includes(props.id)) {
         tempUser.likes = tempUser.likes.filter((x) => x !== props.id);
       };
+      props.setUserRef(tempUser);
       firebase.firestore().collection('users').doc(props.userRef.displayName)
         .set(tempUser);
       setHated(true);
       setLiked(false);
+      // setCommentPoints is to update total points on user page
+      if (props.setCommentPoints) {
+        props.setCommentPoints(props.commentPoints - 1);
+      };
     };
   };
 
