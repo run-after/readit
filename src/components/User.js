@@ -16,33 +16,34 @@ const User = (props) => {
 
   const { name } = useParams();
   
-  const thisUserRef = firebase.firestore().collection('users').doc(name);
-  
   // checks if user exists in DB
-  thisUserRef.get().then((doc) => {
-    if (doc.data()) {
-      setDoesUserExist(true);
-    };
-  });
+  firebase.firestore().collection('users').doc(name).get()
+    .then((doc) => {
+      setDoesUserExist(!!doc.data());
+    });
 
   useEffect(() => {
     let tempPosts = {};
+    let tempPostPoints = 0;
     Object.keys(props.allPosts).forEach(key => {
       if (props.allPosts[key].user === name) {
-        tempPosts[key] = props.allPosts[key];
-        setPostPoints(p => p + props.allPosts[key].likes);
+        tempPosts[key] = JSON.parse(JSON.stringify(props.allPosts[key]));
+        tempPostPoints += props.allPosts[key].likes;
       };
     });
     // Lists all comments made by user
     let tempComments = {};
+    let tempCommentPoints = 0;
     Object.keys(props.allComments).forEach(key => {
       if (props.allComments[key].user === name) {
-        tempComments[key] = props.allComments[key];
-        setCommentPoints(c => c + props.allComments[key].likes);
+        tempComments[key] = JSON.parse(JSON.stringify(props.allComments[key]));
+        tempCommentPoints += props.allComments[key].likes;
       };
     });
     setUserPosts(tempPosts);
     setUserComments(tempComments);
+    setPostPoints(tempPostPoints);
+    setCommentPoints(tempCommentPoints);
   }, [name, props.allPosts, props.allComments, props.userRef]);
 
   return (
@@ -63,13 +64,35 @@ const User = (props) => {
         <div>Posts:</div>
         {
           Object.keys(userPosts).map((key) => {
-            return <Post key={key} post={userPosts[key]} id={key} user={props.user} allComments={props.allComments} userRef={props.userRef}/>
+            return <Post
+              key={key}
+              post={userPosts[key]}
+              id={key}
+              allPosts={props.allPosts}
+              setAllPosts={props.setAllPosts}
+              allComments={props.allComments}
+              setAllComments={props.setAllComments}
+              userRef={props.userRef}
+              setUserRef={props.setUserRef}
+              postPoints={postPoints}
+              setPostPoints={setPostPoints}
+            />
           })
         }
         Comments:
         {
           Object.keys(userComments).map((key) => {
-            return <Comment key={key} comment={userComments[key]} id={key} userRef={props.userRef} />
+            return <Comment
+              key={key}
+              comment={userComments[key]}
+              id={key}
+              userRef={props.userRef}
+              setUserRef={props.setUserRef}
+              allComments={props.allComments}
+              setAllComments={props.setAllComments}
+              commentPoints={commentPoints}
+              setCommentPoints={setCommentPoints}
+            />
           })
         }
       </div>
