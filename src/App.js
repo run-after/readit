@@ -23,9 +23,9 @@ function App(props) {
 
   const [user, setUser] = useState(initialUser);
   const [userRef, setUserRef] = useState(null);
-  const [allPosts, setAllPosts] = useState(props.posts);
-  const [allGroups] = useState(props.groups);
-  const [allComments, setAllComments] = useState(props.comments);
+  const [allPosts, setAllPosts] = useState({});
+  const [allGroups] = useState({});
+  const [allComments, setAllComments] = useState({});
 
   useEffect(() => {
     if (user) {
@@ -35,10 +35,39 @@ function App(props) {
     };
   }, [user]);
 
+  useEffect(() => {
+    let posts = {};
+    let comments = {};
+    let groups = {};
+    // Get all posts from DB
+    firebase.firestore().collection('posts').get().then((querySnapShot) => {
+      querySnapShot.forEach((x) => {
+        posts[x.id] = x.data();
+      });
+      setAllPosts(posts)
+    });
+
+    // Get all comments from DB
+    firebase.firestore().collection('comments').get().then((querySnapShot) => {
+      querySnapShot.forEach((x) => {
+        comments[x.id] = x.data();
+      });
+    });
+
+    // Get all groups from DB
+    firebase.firestore().collection('groups').get().then((querySnapShot) => {
+      querySnapShot.forEach(x => {
+        groups[x.id] = {
+          description: x.data().description
+        };
+      });
+    });
+  }, []);
+
   return (
     <div className="App">
       <BrowserRouter>
-        <Header user={user} setUser={setUser} userRef={userRef}/>
+        <Header user={user} setUser={setUser} userRef={userRef} />
         <Switch>
           <Route exact path='/' render={() => <Feed
             userRef={userRef}
@@ -83,7 +112,7 @@ function App(props) {
       </BrowserRouter>
     </div>
   );
-}
+};
 
 export default App;
 
