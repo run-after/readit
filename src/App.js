@@ -24,7 +24,7 @@ function App(props) {
   const [user, setUser] = useState(initialUser);
   const [userRef, setUserRef] = useState(null);
   const [allPosts, setAllPosts] = useState({});
-  const [allGroups] = useState({});
+  const [allGroups, setAllGroups] = useState({});
   const [allComments, setAllComments] = useState({});
 
   useEffect(() => {
@@ -44,7 +44,7 @@ function App(props) {
       querySnapShot.forEach((x) => {
         posts[x.id] = x.data();
       });
-      setAllPosts(posts)
+      setAllPosts(posts);
     });
 
     // Get all comments from DB
@@ -52,6 +52,7 @@ function App(props) {
       querySnapShot.forEach((x) => {
         comments[x.id] = x.data();
       });
+      setAllComments(comments);
     });
 
     // Get all groups from DB
@@ -61,6 +62,7 @@ function App(props) {
           description: x.data().description
         };
       });
+      setAllGroups(groups);
     });
   }, []);
 
