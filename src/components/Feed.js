@@ -4,9 +4,9 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 import Post from './Post';
 import postFactory from '../scripts/postFactory';
+import { Link } from 'react-router-dom';
 
 const Feed = (props) => {
-  const db = firebase.firestore();
 
   const [posts, setPosts] = useState({});
   const [groups] = useState({content: props.allGroups});
@@ -26,7 +26,7 @@ const Feed = (props) => {
     const form = e.target;
     const newPost = postFactory(props.userRef.displayName, form[0].value, form[1].value, form[2].value);
     let id;
-    db.collection('posts').add(newPost).then((doc) => {
+    firebase.firestore().collection('posts').add(newPost).then((doc) => {
       id = doc.id;
     }).then(() => {
       props.setAllPosts(prevState => ({
@@ -38,13 +38,10 @@ const Feed = (props) => {
  
   // This works. Is kind of ugly, but working for now.
   useEffect(() => {
-    
     let tempPosts = {};
     if (props.group) {
       if (props.group === 'all') {
-        Object.keys(props.allPosts).forEach((key) => {
-          tempPosts[key] = props.allPosts[key];
-        });
+        tempPosts = JSON.parse(JSON.stringify(props.allPosts));
       } else {
         Object.keys(props.allPosts).forEach(key => {
           if (props.allPosts[key].group === props.group) {
@@ -54,20 +51,21 @@ const Feed = (props) => {
       };
     } else {
       if (!props.userRef) {
-        Object.keys(props.allPosts).forEach(key => {
-          tempPosts[key] = props.allPosts[key];
-        });
+        tempPosts = JSON.parse(JSON.stringify(props.allPosts));
       } else {
         Object.keys(props.allPosts).forEach(key => {
           if (props.userRef.groups.includes(props.allPosts[key].group)) {
             tempPosts[key] = props.allPosts[key];
           };
-        });
+        });        
       };
     };
+    const joinPost = postFactory('Readit', 'Join more groups to add to your feed', <Link to='/groups'>Join Groups</Link>, 'Feed');
+      if (Object.keys(tempPosts).length < 1) {
+        tempPosts['join'] = joinPost;
+      };
     setPosts(tempPosts);
-
-  }, [props.allPosts, props.group, props.userRef]);  
+  }, [props.allPosts, props.group, props.userRef]);
 
   return (
     <div className='container'>
@@ -116,11 +114,5 @@ const Feed = (props) => {
 export default Feed;
 
 /*
-- When not logged in, feed doesn't show all posts on reload
-
-- Check why so many renders ( i think its because of how man posts/comments are rendered)
-
-- What if user isn't subscribed to any groups
-
-Button on right margin of Feed to make new pic post doesn't work
+- Button on right margin of Feed to make new pic post doesn't work
 */
