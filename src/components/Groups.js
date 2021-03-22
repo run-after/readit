@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom';
 
 const Groups = (props) => {
 
-  const [groups, setGroups] = useState({});
   const [userGroups, setUserGroups] = useState({ groups: [] });
   const [shouldDisplayForm, setShouldDisplayForm] = useState(false);
   
@@ -64,7 +63,7 @@ const Groups = (props) => {
     e.preventDefault();
     const groupName = e.target[0].value.toLowerCase();
     const groupDescription = e.target[1].value;
-    if (!Object.keys(groups).includes(groupName)) {
+    if (!Object.keys(props.allGroups).includes(groupName)) {
       // Shouldn't manipulate DOM
       if (groupName.includes(' ')) {
         document.querySelector('.warning').textContent = 'No spaces allowed in name';
@@ -73,7 +72,7 @@ const Groups = (props) => {
           description: groupDescription
         }).then(() => {
           setShouldDisplayForm(false);
-          setGroups(prevState => ({
+          props.setAllGroups(prevState => ({
             ...prevState,
             [groupName]: {
               description: groupDescription
@@ -90,8 +89,7 @@ const Groups = (props) => {
     if (props.userRef) {
       setUserGroups({ groups: props.userRef.groups });
     };
-    setGroups(props.allGroups);
-  }, [props.userRef, props.allGroups]);
+  }, [props.userRef]);
 
   return (
     <div className='groups-container'>
@@ -101,7 +99,7 @@ const Groups = (props) => {
       <div className='list-container'>
         <ul className='groups-list'>
           {
-            Object.keys(groups).map((key) => {
+            Object.keys(props.allGroups).map((key) => {
               return (
                 <li key={key} data-name={key} className='group-item' >
                   <div className='group-header'>
@@ -113,7 +111,7 @@ const Groups = (props) => {
                     <Link to={`/groups/${key}`}>{key}</Link>
                   </div>
                   <div className='group-description'>
-                    {groups[key].description}
+                    {props.allGroups[key].description}
                   </div>
                 </li>
               );
