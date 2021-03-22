@@ -60,9 +60,12 @@ const Feed = (props) => {
         });        
       };
     };
-    const joinPost = postFactory('Readit', 'Join more groups to add to your feed', <Link to='/groups'>Join Groups</Link>, 'Feed');
-      if (Object.keys(tempPosts).length < 1) {
+    if (Object.keys(tempPosts).length < 1 && !props.group) {
+        const joinPost = postFactory('Readit', 'Join more groups to add to your feed', <Link to='/groups'>Join Groups</Link>, 'Feed');
         tempPosts['join'] = joinPost;
+      } else if (Object.keys(tempPosts).length < 1 && props.group) {
+        const firstPost = postFactory('Readit', 'Be the first to post here', ' ', props.group);
+        tempPosts['first'] = firstPost;
       };
     setPosts(tempPosts);
   }, [props.allPosts, props.group, props.userRef]);
