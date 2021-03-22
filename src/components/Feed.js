@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 const Feed = (props) => {
 
   const [posts, setPosts] = useState({});
-  const [groups] = useState({content: props.allGroups});
+  const [groups, setGroups] = useState({});
   const [shouldDisplayForm, setShouldDisplayForm] = useState(false);
 
   const displayForm = () => {
@@ -67,6 +67,10 @@ const Feed = (props) => {
     setPosts(tempPosts);
   }, [props.allPosts, props.group, props.userRef]);
 
+  useEffect(() => {
+    setGroups(props.allGroups);
+  }, [props.allGroups]);
+
   return (
     <div className='container'>
       <div className='feed'>
@@ -96,7 +100,7 @@ const Feed = (props) => {
             {
               ((!props.group || props.group === 'all') &&
               (
-                groups.content.map((group) => {
+                Object.keys(groups).map((group) => {
                   return <option key={group} value={group}>{group}</option>
                 })
               )) ||
