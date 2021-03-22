@@ -172,6 +172,7 @@ const Post = (props) => {
                   userRef={props.userRef}
                   setUserRef={props.setUserRef}
                   allComments={props.allComments}
+                  setAllComments={props.setAllComments}
                   setCommentPoints={props.setCommentPoints}
                 />
               })
