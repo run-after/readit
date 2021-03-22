@@ -11,7 +11,7 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 
-function App(props) {
+function App() {
 
   let initialUser;
 
@@ -73,6 +73,7 @@ function App(props) {
         <Switch>
           <Route exact path='/' render={() => <Feed
             userRef={userRef}
+            setUserRef={setUserRef}
             allPosts={allPosts}
             setAllPosts={setAllPosts}
             allGroups={allGroups}
@@ -109,6 +110,7 @@ function App(props) {
             userRef={userRef}
             setUserRef={setUserRef}
             allGroups={allGroups}
+            setAllGroups={setAllGroups}
           />} />
         </Switch>
       </BrowserRouter>
@@ -121,11 +123,7 @@ export default App;
 /*
   Work in Feed
 
-  Don't love allGroups object structure
-
   Make unfound route go to 404
-
-  Remove link from Header with name. When on a different user page, it doesn't update info
 
   Maybe move group list from header to right margin to fill space???
 
