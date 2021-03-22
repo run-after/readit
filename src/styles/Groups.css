@@ -104,3 +104,7 @@
 .create-group-form textarea {
   width: 100%;
 }
+
+.create-group-form .close-form {
+  padding: 5px;
+}

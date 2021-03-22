@@ -56,22 +56,31 @@ const Groups = (props) => {
     setShouldDisplayForm(true);
   };
 
+  const closeForm = () => {
+    setShouldDisplayForm(false);
+  };
+
   const createGroup = (e) => {
     e.preventDefault();
     const groupName = e.target[0].value.toLowerCase();
     const groupDescription = e.target[1].value.toLowerCase();
     if (!Object.keys(groups).includes(groupName)) {
-      firebase.firestore().collection('groups').doc(groupName).set({
-        description: groupDescription
-      }).then(() => {
-        setShouldDisplayForm(false);
-        setGroups(prevState => ({
-          ...prevState,
-          [groupName]: {
-            description: groupDescription
-          }
-        }));
-      });
+      // Shouldn't manipulate DOM
+      if (groupName.includes(' ')) {
+        document.querySelector('.warning').textContent = 'No spaces allowed in name';
+      } else {
+        firebase.firestore().collection('groups').doc(groupName).set({
+          description: groupDescription
+        }).then(() => {
+          setShouldDisplayForm(false);
+          setGroups(prevState => ({
+            ...prevState,
+            [groupName]: {
+              description: groupDescription
+            }
+          }));
+        });
+      }
     } else {// TEMP - not supposed to manipulate DOM
       document.querySelector('.warning').textContent = 'Group already exists';
     };
@@ -121,6 +130,7 @@ const Groups = (props) => {
       {
         shouldDisplayForm &&
         <form className='create-group-form' onSubmit={createGroup}>
+          <div onClick={closeForm}className='close-form'>X</div>
           <h1>Create your group</h1>
           <div>
             <div className='warning'></div>
