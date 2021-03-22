@@ -63,7 +63,7 @@ const Groups = (props) => {
   const createGroup = (e) => {
     e.preventDefault();
     const groupName = e.target[0].value.toLowerCase();
-    const groupDescription = e.target[1].value.toLowerCase();
+    const groupDescription = e.target[1].value;
     if (!Object.keys(groups).includes(groupName)) {
       // Shouldn't manipulate DOM
       if (groupName.includes(' ')) {
@@ -80,7 +80,7 @@ const Groups = (props) => {
             }
           }));
         });
-      }
+      };
     } else {// TEMP - not supposed to manipulate DOM
       document.querySelector('.warning').textContent = 'Group already exists';
     };
@@ -139,7 +139,7 @@ const Groups = (props) => {
           </div>
           <div>
             <label>Group description</label>
-            <textarea required minLength='5' maxLength='50' placeholder='Enter description' />
+            <textarea required minLength='5' maxLength='150' placeholder='Enter description' />
           </div>
           <button>submit</button>
         </form>
@@ -149,5 +149,3 @@ const Groups = (props) => {
 };
 
 export default Groups;
-
-//Don't allow groups to have a space in the name
