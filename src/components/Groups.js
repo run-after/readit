@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 const Groups = (props) => {
 
-  const [groups, setGroups] = useState(props.allGroups);
+  const [groups, setGroups] = useState({});
   const [userGroups, setUserGroups] = useState({ groups: [] });
   const [shouldDisplayForm, setShouldDisplayForm] = useState(false);
   
@@ -81,7 +81,8 @@ const Groups = (props) => {
     if (props.userRef) {
       setUserGroups({ groups: props.userRef.groups });
     };
-  }, [props.userRef]);
+    setGroups(props.allGroups);
+  }, [props.userRef, props.allGroups]);
 
   return (
     <div className='groups-container'>
@@ -138,3 +139,5 @@ const Groups = (props) => {
 };
 
 export default Groups;
+
+//Don't allow groups to have a space in the name
