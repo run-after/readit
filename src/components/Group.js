@@ -1,5 +1,5 @@
 import Feed from './Feed';
-import { useParams } from 'react-router-dom';
+import { useParams, Redirect } from 'react-router-dom';
 import {useEffect, useState} from 'react';
 import '../styles/Group.css';
 import firebase from 'firebase/app';
@@ -56,10 +56,13 @@ const Group = (props) => {
 
   useEffect(() => {
     if (props.userRef) {
-        setUserGroups(props.userRef.groups)  
-      };  
-      
-  }, [props.userRef])
+      setUserGroups(props.userRef.groups)
+    }; 
+  }, [props.userRef]);
+
+  if (!Object.keys(props.allGroups).includes(group)) {
+    return <Redirect to='/404' />
+  };
   
   return (
     <div className='group'>
