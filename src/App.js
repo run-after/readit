@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
+import PageNotFound from './components/PageNotFound';
 
 function App() {
 
@@ -112,6 +113,7 @@ function App() {
             allGroups={allGroups}
             setAllGroups={setAllGroups}
           />} />
+          <Route path='*' render={() => <PageNotFound />} />
         </Switch>
       </BrowserRouter>
     </div>
@@ -122,8 +124,6 @@ export default App;
 
 /*
   Work in Feed
-
-  Make unfound route go to 404
 
   Maybe move group list from header to right margin to fill space???
 
