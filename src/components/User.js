@@ -5,61 +5,27 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 import Post from './Post';
 import Comment from './Comment';
+import error from '../media/404.png';
 
 const User = (props) => {
 
-  const [doesUserExist, setDoesUserExist] = useState(false);
+  const [doesUserExist, setDoesUserExist] = useState(true);
   const [userPosts, setUserPosts] = useState({});
   const [userComments, setUserComments] = useState({});
   const [postPoints, setPostPoints] = useState(0);
   const [commentPoints, setCommentPoints] = useState(0);
 
   const { name } = useParams();
-  
-  // checks if user exists in DB
-  firebase.firestore().collection('users').doc(name).get()
-    .then((doc) => {
-      setDoesUserExist(!!doc.data());
-    });
 
-  useEffect(() => {
-    let tempPosts = {};
-    let tempPostPoints = 0;
-    Object.keys(props.allPosts).forEach(key => {
-      if (props.allPosts[key].user === name) {
-        tempPosts[key] = JSON.parse(JSON.stringify(props.allPosts[key]));
-        tempPostPoints += props.allPosts[key].likes;
-      };
-    });
-    // Lists all comments made by user
-    let tempComments = {};
-    let tempCommentPoints = 0;
-    Object.keys(props.allComments).forEach(key => {
-      if (props.allComments[key].user === name) {
-        tempComments[key] = JSON.parse(JSON.stringify(props.allComments[key]));
-        tempCommentPoints += props.allComments[key].likes;
-      };
-    });
-    setUserPosts(tempPosts);
-    setUserComments(tempComments);
-    setPostPoints(tempPostPoints);
-    setCommentPoints(tempCommentPoints);
-  }, [name, props.allPosts, props.allComments, props.userRef]);
+  const test = (
+    <div>
+      <div className='user'>
+        <div className='image-placeholder'></div>
+        <p className='user-name'>{name}</p>
+        <p className='post-points'>Post points: {postPoints}</p>
+        <p className='comment-points'>Comment points: {commentPoints}</p>
+      </div>
 
-  return (
-    <div className='user-container'>
-      {
-        doesUserExist &&
-        <div className='user'>
-          <div className='image-placeholder'></div>
-          <p className='user-name'>{name}</p>
-          <p className='post-points'>Post points: {postPoints}</p>
-          <p className='comment-points'>Comment points: {commentPoints}</p> 
-        </div>
-      }
-      {
-        !doesUserExist && <div className='user'>Does not exist</div>
-      }
       <div className='feed'>
         <div>Posts:</div>
         {
@@ -96,6 +62,42 @@ const User = (props) => {
           })
         }
       </div>
+    </div>
+  );
+  
+  // checks if user exists in DB
+  firebase.firestore().collection('users').doc(name).get()
+  .then((doc) => {
+    setDoesUserExist(!!doc.data());
+  });
+
+  useEffect(() => {
+    let tempPosts = {};
+    let tempPostPoints = 0;
+    Object.keys(props.allPosts).forEach(key => {
+      if (props.allPosts[key].user === name) {
+        tempPosts[key] = JSON.parse(JSON.stringify(props.allPosts[key]));
+        tempPostPoints += props.allPosts[key].likes;
+      };
+    });
+    // Lists all comments made by user
+    let tempComments = {};
+    let tempCommentPoints = 0;
+    Object.keys(props.allComments).forEach(key => {
+      if (props.allComments[key].user === name) {
+        tempComments[key] = JSON.parse(JSON.stringify(props.allComments[key]));
+        tempCommentPoints += props.allComments[key].likes;
+      };
+    });
+    setUserPosts(tempPosts);
+    setUserComments(tempComments);
+    setPostPoints(tempPostPoints);
+    setCommentPoints(tempCommentPoints);
+  }, [name, props.allPosts, props.allComments, props.userRef]);
+
+  return (
+    <div className='user-container'>
+      {(doesUserExist && test) || <img src={error} alt='user not found'/>}    
     </div>
   );
 };
