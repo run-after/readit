@@ -60,7 +60,7 @@ const Group = (props) => {
     }; 
   }, [props.userRef]);
 
-  if (!Object.keys(props.allGroups).includes(group)) {
+  if (!Object.keys(props.allGroups).includes(group) && group !== 'all') {
     return <Redirect to='/404' />
   };
   
