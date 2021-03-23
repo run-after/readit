@@ -163,7 +163,9 @@ const Post = (props) => {
                 <textarea required placeholder='Your thoughts...' />
                 <button className='submit-comment'>Save</button>
               </form>            
-            {
+          </div>
+        }
+        { shouldDisplayComments &&
               Object.keys(comments).map((key) => {
                 return <Comment
                   key={key}
@@ -177,8 +179,6 @@ const Post = (props) => {
                 />
               })
             }
-          </div>
-        }
       </div>  
     </div>
   );
