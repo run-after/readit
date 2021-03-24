@@ -7,7 +7,7 @@ import User from './components/User';
 import Group from './components/Group';
 import Groups from './components/Groups';
 import { useEffect, useState } from 'react';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { HashRouter, Switch, Route } from 'react-router-dom';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import PageNotFound from './components/PageNotFound';
@@ -69,7 +69,7 @@ function App() {
 
   return (
     <div className="App">
-      <BrowserRouter basename={process.env.PUBLIC_URL}>
+      <HashRouter>
         <Header user={user} setUser={setUser} userRef={userRef} />
         <Switch>
           <Route exact path='/' render={() => <Feed
@@ -115,7 +115,7 @@ function App() {
           />} />
           <Route path='*' render={() => <PageNotFound />} />
         </Switch>
-      </BrowserRouter>
+      </HashRouter>
     </div>
   );
 };
