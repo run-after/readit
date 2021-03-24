@@ -1,14 +1,14 @@
+import firebase from 'firebase/app';
+import 'firebase/firestore';
+import '../styles/Post.css';
 import upArrow from '../media/up-arrow.png';
 import upArrowLiked from '../media/up-arrow-liked.png';
 import downArrow from '../media/down-arrow.png';
 import downArrowHate from '../media/down-arrow-hate.png';
-import '../styles/Post.css';
 import formatTime from '../scripts/formatTime';
-import firebase from 'firebase/app';
-import 'firebase/firestore';
-import { useState, useEffect } from 'react';
 import Comment from './Comment';
 import commentFactory from '../scripts/commentFactory';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 const Post = (props) => {
@@ -152,6 +152,12 @@ const Post = (props) => {
         </div>
         <div className='post-body'>
           {props.post.content}
+          {
+            props.post.image &&
+            <a href={props.post.image} target='_blank' rel="noreferrer">
+              <img className='post-img' src={props.post.image} alt={props.post.title} />
+            </a>
+          }
         </div>
         <div className='post-footer'>
           <button onClick={displayComments}>{Object.keys(comments).length} comments</button>

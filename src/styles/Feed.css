@@ -51,6 +51,7 @@
   height: 300px;
   width: 300px;
   border-radius: 10px;
+  overflow: hidden;
 }
 
 .post-form .content {
@@ -75,4 +76,11 @@
 
 .close-form:hover {
   opacity: 0.5;
+}
+
+.file-uploader {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  font-size: 0.75em;
 }

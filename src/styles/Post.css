@@ -47,6 +47,10 @@
   margin: 0 5px;
 }
 
+.post-img {
+  height: 200px;
+}
+
 .post-footer {
   height: 10%;
   margin: 5px;

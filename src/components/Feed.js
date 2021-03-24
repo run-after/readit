@@ -2,6 +2,7 @@ import '../styles/Feed.css';
 import { useState, useEffect } from 'react';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
+import 'firebase/storage';
 import Post from './Post';
 import postFactory from '../scripts/postFactory';
 import { Link } from 'react-router-dom';
@@ -11,20 +12,29 @@ const Feed = (props) => {
   const [posts, setPosts] = useState({});
   const [groups, setGroups] = useState({});
   const [shouldDisplayForm, setShouldDisplayForm] = useState(false);
+  const [shouldDisplayPicForm, setShouldDisplayPicForm] = useState(false);
 
   const displayForm = () => {
     setShouldDisplayForm(true);
+  };
+
+  const displayPicForm = () => {
+    setShouldDisplayPicForm(true);
   };
 
   const doNotDisplayForm = () => {
     setShouldDisplayForm(false);
   };
 
+  const doNotDisplayPicForm = () => {
+    setShouldDisplayPicForm(false);
+  };
+
   const createNewPost = (e) => {
     e.preventDefault();
     setShouldDisplayForm(false);
     const form = e.target;
-    const newPost = postFactory(props.userRef.displayName, form[0].value, form[1].value, form[2].value);
+    const newPost = postFactory(props.userRef.displayName, form[0].value, form[1].value, form[2].value, null);
     let id;
     firebase.firestore().collection('posts').add(newPost).then((doc) => {
       id = doc.id;
@@ -33,6 +43,41 @@ const Feed = (props) => {
         ...prevState,
         [id]: newPost
       }));
+    });
+  };
+  
+  const checkDataSize = (e) => {
+    if (e.target.files[0].size > 2000000) {
+      document.querySelector('.file-uploader').style = 'border: 1px solid red; color: red;';
+      document.querySelector('.pic-submit-btn').disabled = true;
+    } else {
+      document.querySelector('.file-uploader').style = 'border: none; color: black;';
+      document.querySelector('.pic-submit-btn').disabled = false;
+    };
+  };
+
+  const createPicNewPost = (e) => {
+    // need to make it so only people logged in can upload
+    // need to make it so everyone can view
+    e.preventDefault();
+    setShouldDisplayPicForm(false);
+    const form = e.target;
+    // Create ref
+    const img = firebase.storage().ref().child(form[1].files[0].name);
+    // store it
+    img.put(form[1].files[0]).then(() => {
+      img.getDownloadURL().then((url) => {
+        const newPost = postFactory(props.userRef.displayName, form[0].value, null, form[2].value, url);
+        let id;
+        firebase.firestore().collection('posts').add(newPost).then((doc) => {
+            id = doc.id;
+          }).then(() => {
+            props.setAllPosts(prevState => ({
+              ...prevState,
+              [id]: newPost
+          }));
+        });
+      });  
     });
   };
  
@@ -100,14 +145,14 @@ const Feed = (props) => {
         }
         {
           props.userRef &&
-          <button className='add-post-btn'>Submit new image post</button>
+          <button onClick={displayPicForm} className='add-post-btn'>Submit new image post</button>
         }
       </div>
       {
         shouldDisplayForm &&
         <form className='post-form' onSubmit={createNewPost}>
-          <input placeholder='Enter your title' />
-          <textarea className='content' placeholder='Enter your content' />
+          <input required placeholder='Enter your title' />
+          <textarea required className='content' placeholder='Enter your content' />
           <select required name='groups'>
             <option value=''>--Choose a group</option>
             {
@@ -124,12 +169,32 @@ const Feed = (props) => {
           <button className='close-form' onClick={doNotDisplayForm}>x</button>
         </form>
       }
+      {
+        shouldDisplayPicForm &&
+        <form className='post-form' onSubmit={createPicNewPost}>
+          <input required placeholder='Enter your title' />
+          <div className='file-uploader'>
+            <input onChange={checkDataSize} type='file' accept='.png, .jpeg, .jpg, .gif' />
+            Max size: 2MB
+          </div>
+          <select required name='groups'>
+            <option value=''>--Choose a group</option>
+            {
+              ((!props.group || props.group === 'all') &&
+              (
+                Object.keys(groups).map((group) => {
+                  return <option key={group} value={group}>{group}</option>
+                })
+              )) ||
+              <option value={props.group}>{props.group}</option>
+            }
+          </select>
+          <button className='pic-submit-btn'>Submit</button>
+          <button className='close-form' onClick={doNotDisplayPicForm}>x</button>
+        </form>
+      }
     </div>
   );
 };
 
 export default Feed;
-
-/*
-- Button on right margin of Feed to make new pic post doesn't work
-*/

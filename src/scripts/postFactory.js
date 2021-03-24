@@ -1,4 +1,4 @@
-const postFactory = (user, title, content, group) => {
+const postFactory = (user, title, content, group, image) => {
   const time = new Date().getTime();
   return (
     {
@@ -7,7 +7,8 @@ const postFactory = (user, title, content, group) => {
       likes: 0,
       timestamp: time,
       title: title,
-      user: user
+      user: user,
+      image: image
     }
   )
 

@@ -123,9 +123,7 @@ function App() {
 export default App;
 
 /*
-  Work in Feed
-
   Maybe move group list from header to right margin to fill space???
 
-  Maybe, when first making a post or a comment, it's upvoted by you right away
+  add post buttons should be fixed
 */
