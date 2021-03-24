@@ -69,7 +69,7 @@ function App() {
 
   return (
     <div className="App">
-      <BrowserRouter>
+      <BrowserRouter basename={process.env.PUBLIC_URL}>
         <Header user={user} setUser={setUser} userRef={userRef} />
         <Switch>
           <Route exact path='/' render={() => <Feed
@@ -121,9 +121,3 @@ function App() {
 };
 
 export default App;
-
-/*
-  Maybe move group list from header to right margin to fill space???
-
-  add post buttons should be fixed
-*/
