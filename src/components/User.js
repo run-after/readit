@@ -17,8 +17,8 @@ const User = (props) => {
 
   const { name } = useParams();
 
-  const test = (
-    <div>
+  const displayUser = (
+    <div className='user-page'>
       <div className='user'>
         <div className='image-placeholder'></div>
         <p className='user-name'>{name}</p>
@@ -97,11 +97,9 @@ const User = (props) => {
 
   return (
     <div className='user-container'>
-      {(doesUserExist && test) || <img src={error} alt='user not found'/>}    
+      {(doesUserExist && displayUser) || <img src={error} alt='user not found'/>}    
     </div>
   );
 };
 
 export default User;
-
-// If I like a comment in comment section.. it doesn't show on comment in post (not a huge deal)
