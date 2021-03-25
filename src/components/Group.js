@@ -24,12 +24,9 @@ const Group = (props) => {
         likes: props.userRef.likes,
         hates: props.userRef.hates
       };
-      firebase.firestore().collection('users').doc(props.userRef.displayName).set(
-        tempUser
-      );
+      firebase.firestore().collection('users').doc(props.userRef.displayName)
+        .set(tempUser);
       props.setUserRef(tempUser);
-    } else {
-      alert('sign in first');// TEMP
     };
   };
 
@@ -37,7 +34,7 @@ const Group = (props) => {
     if(props.userRef){
       const groupName = group;
       let tempUserGroups = userGroups;
-      tempUserGroups = tempUserGroups.filter((group) => { return group !== groupName })
+      tempUserGroups = tempUserGroups.filter(group => group !== groupName);
       setUserGroups(tempUserGroups);
       let tempUser = {
         email: props.userRef.email,
@@ -49,9 +46,7 @@ const Group = (props) => {
       firebase.firestore().collection('users').doc(props.userRef.displayName)
         .set(tempUser);
       props.setUserRef(tempUser);
-    } else {
-      alert('sign in first');// TEMP
-    }
+    };
   };
 
   useEffect(() => {
