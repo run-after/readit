@@ -2,8 +2,11 @@ import '../styles/Login.css';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import { Redirect } from 'react-router-dom';
+import { useState } from 'react';
 
 const Login = (props) => {
+
+  const [warningMessage, setWarningMessage] = useState(null);
 
   if (props.user) {
     return <Redirect to='/' />;
@@ -17,9 +20,8 @@ const Login = (props) => {
       firebase.auth().signInWithEmailAndPassword(form[0].value, form[1].value)
         .then((userCredential) => {
           props.setUser(userCredential.user);
-      }).catch((error) => {
-        const warning = form.querySelector('.warning');
-        warning.textContent = error.message;
+        }).catch((error) => {
+          setWarningMessage(error.message);
       });
     })
     .catch((error) => {
@@ -29,7 +31,7 @@ const Login = (props) => {
     
   return (
     <form className='login-form' onSubmit={signIn}>
-      <p className='warning'></p>
+      <p className='warning'>{warningMessage}</p>
       <label>Email</label>
       <input name='email' type='email' required />
       <label>Password</label>
