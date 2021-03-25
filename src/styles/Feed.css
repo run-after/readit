@@ -3,6 +3,7 @@
   flex-direction: row;
   width: 100%;
   margin-top: 75px;
+  gap: 5px;
 }
 
 .spacer {
@@ -85,4 +86,25 @@
   flex-direction: column;
   padding: 10px;
   font-size: 0.75em;
+}
+
+@media (max-width: 750px) {
+  .container {
+    flex-direction: column-reverse;
+  }
+
+  .right-column {
+    position: relative;
+    flex-direction: row;
+    margin-top: 0;
+    width: 100%;
+  }
+
+  .feed {
+    width: 100%;
+  }
+
+  .post-form {
+    width: 75%;
+  }
 }
