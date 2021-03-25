@@ -2,3 +2,9 @@
   width: 50%;
   margin: 75px auto;
 }
+
+@media (max-width: 750px) {
+  .error-image {
+    width: 100%;
+  }
+}
