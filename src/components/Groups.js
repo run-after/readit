@@ -8,6 +8,7 @@ const Groups = (props) => {
 
   const [userGroups, setUserGroups] = useState({ groups: [] });
   const [shouldDisplayForm, setShouldDisplayForm] = useState(false);
+  const [warningMessage, setWarningMessage] = useState(null);
   
   const joinGroup = (e) => {
     if (props.userRef) {
@@ -59,30 +60,38 @@ const Groups = (props) => {
     setShouldDisplayForm(false);
   };
 
+  const checkName = (e) => {
+    const submitBtn = document.querySelector('.form-submit');
+    if (Object.keys(props.allGroups).includes(e.target.value.toLowerCase())) {
+      setWarningMessage('Group already exists');
+      submitBtn.disabled = true;
+      return;
+    };
+    if (e.target.value.toLowerCase().includes(' ')) {
+      setWarningMessage('No spaces allowed in name');
+      submitBtn.disabled = true;
+      return;
+    };
+    setWarningMessage(null);
+    submitBtn.disabled = false;
+  };
+
   const createGroup = (e) => {
     e.preventDefault();
     const groupName = e.target[0].value.toLowerCase();
     const groupDescription = e.target[1].value;
-    if (!Object.keys(props.allGroups).includes(groupName)) {
-      // Shouldn't manipulate DOM
-      if (groupName.includes(' ')) {
-        document.querySelector('.warning').textContent = 'No spaces allowed in name';
-      } else {
-        firebase.firestore().collection('groups').doc(groupName).set({
-          description: groupDescription
-        }).then(() => {
-          setShouldDisplayForm(false);
-          props.setAllGroups(prevState => ({
-            ...prevState,
-            [groupName]: {
-              description: groupDescription
-            }
-          }));
-        });
-      };
-    } else {// TEMP - not supposed to manipulate DOM
-      document.querySelector('.warning').textContent = 'Group already exists';
-    };
+    
+    firebase.firestore().collection('groups').doc(groupName).set({
+        description: groupDescription
+      }).then(() => {
+        setShouldDisplayForm(false);
+        props.setAllGroups(prevState => ({
+          ...prevState,
+          [groupName]: {
+            description: groupDescription
+          }
+        }));
+      });
   };
 
   useEffect(() => {
@@ -131,15 +140,15 @@ const Groups = (props) => {
           <div onClick={closeForm}className='close-form'>X</div>
           <h1>Create your group</h1>
           <div>
-            <div className='warning'></div>
+            <div className='warning'>{warningMessage}</div>
             <label>Group name</label>
-            <input required maxLength='20' placeholder='Group name...' />
+            <input onChange={checkName} required maxLength='20' placeholder='Group name...' />
           </div>
           <div>
             <label>Group description</label>
             <textarea required minLength='5' maxLength='150' placeholder='Enter description' />
           </div>
-          <button>submit</button>
+          <button className='form-submit'>submit</button>
         </form>
       }
     </div>
