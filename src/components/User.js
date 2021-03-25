@@ -97,7 +97,7 @@ const User = (props) => {
 
   return (
     <div className='user-container'>
-      {(doesUserExist && displayUser) || <img src={error} alt='user not found'/>}    
+      {(doesUserExist && displayUser) || <img className='error-image' src={error} alt='user not found'/>}
     </div>
   );
 };
