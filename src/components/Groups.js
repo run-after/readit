@@ -26,8 +26,6 @@ const Groups = (props) => {
       firebase.firestore().collection('users').doc(props.userRef.displayName)
         .set(tempUser);
       props.setUserRef(tempUser);
-    } else {
-      alert('sign in first');// TEMP
     };
   };
 
@@ -47,8 +45,6 @@ const Groups = (props) => {
       firebase.firestore().collection('users').doc(props.userRef.displayName)
         .set(tempUser);
       props.setUserRef(tempUser);
-    } else {
-      alert('sign in first');// TEMP
     };
   };
 
