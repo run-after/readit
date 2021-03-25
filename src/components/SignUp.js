@@ -4,12 +4,11 @@ import 'firebase/auth';
 import 'firebase/firestore';
 import { Redirect } from 'react-router-dom';
 import userFactory from '../scripts/userFactory';
+import { useState } from 'react';
 
 const SignUp = (props) => {
 
-  if (props.user) {
-    return <Redirect to='/' />;
-  };
+  const [warningMessage, setWarningMessage] = useState(null);
   
   let user;
 
@@ -25,13 +24,12 @@ const SignUp = (props) => {
   };
 
   const checkCharacters = (e) => {
-    const warning = document.querySelector('.warning');
     const button = document.querySelector('.submit-btn');
     if (e.target.value.includes(' ')) {
-      warning.textContent = 'Username cannot contain spaces';// Not supposed to manipulate DOM
+      setWarningMessage('Username cannot contain spaces');
       button.disabled = true;
     } else {
-      warning.textContent = '';
+      setWarningMessage(null);
       button.disabled = false;
     };
   };
@@ -53,30 +51,30 @@ const SignUp = (props) => {
             }).then(() => {
               props.setUser(user);
             });
-          }).catch((error) => {
-            const warning = form.querySelector('.warning');
-            warning.textContent = error.message;// Not supposed to manipulate dom
           }).then(() => {
             const newUser = userFactory(displayName, email);
-            props.setUserRef(newUser);/// NOT WORKING (sometimes)
-            firebase.firestore().collection('users').doc(displayName).set(
-              newUser
-            );
+            props.setUserRef(newUser);
+            firebase.firestore().collection('users').doc(displayName)
+              .set(newUser);
+            console.log('new user')
           }).then(() => {
             firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION);
           }).catch(function (error) {
-            console.log(error);
+            setWarningMessage(error.message);
           });
       } else {
-        const warning = form.querySelector('.warning');// Not supposed to manipulate DOM
-        warning.textContent = 'User name already exists';
+        setWarningMessage('User name already exists');
       };
     });
+  };
+
+  if (props.user) {
+    return <Redirect to='/' />;
   };
   
   return (
     <form className='sign-up-form' onSubmit={makeAccount}>
-      <p className='warning'></p>
+      <p className='warning'>{warningMessage}</p>
       <label>Display Name</label>
       <input onChange={checkCharacters} name='displayName' type='text' required />
       <label>Email</label>
@@ -89,5 +87,3 @@ const SignUp = (props) => {
 };
 
 export default SignUp;
-
-// When first signed up, cannot upvote / downvote (sometimes)
