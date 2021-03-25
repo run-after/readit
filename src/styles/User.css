@@ -21,6 +21,10 @@
   width: 75%;
 }
 
+.user-page .feed {
+  width: 100%;
+}
+
 .image-placeholder {
   height: 50px;
   width: 50px;
@@ -51,4 +55,10 @@
   background: #00e354;
   width: 50%;
   padding: 5px;
+}
+
+@media (max-width: 750px) {
+  .user-page {
+    width: 100%;
+  }
 }
