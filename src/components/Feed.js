@@ -57,8 +57,6 @@ const Feed = (props) => {
   };
 
   const createPicNewPost = (e) => {
-    // need to make it so only people logged in can upload
-    // need to make it so everyone can view
     e.preventDefault();
     setShouldDisplayPicForm(false);
     const form = e.target;
@@ -81,7 +79,6 @@ const Feed = (props) => {
     });
   };
  
-  // This works. Is kind of ugly, but working for now.
   useEffect(() => {
     let tempPosts = {};
     if (props.group) {
@@ -151,6 +148,7 @@ const Feed = (props) => {
       {
         shouldDisplayForm &&
         <form className='post-form' onSubmit={createNewPost}>
+          <h1>Create new post</h1>
           <input required placeholder='Enter your title' />
           <textarea required className='content' placeholder='Enter your content' />
           <select required name='groups'>
@@ -172,6 +170,7 @@ const Feed = (props) => {
       {
         shouldDisplayPicForm &&
         <form className='post-form' onSubmit={createPicNewPost}>
+          <h1>Create new post</h1>
           <input required placeholder='Enter your title' />
           <div className='file-uploader'>
             <input onChange={checkDataSize} type='file' accept='.png, .jpeg, .jpg, .gif' />

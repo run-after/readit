@@ -63,7 +63,6 @@ const Post = (props) => {
       tempAllPosts[props.id] = tempPost;
       props.setAllPosts(tempAllPosts);
 
-
       const tempUser = JSON.parse(JSON.stringify(props.userRef));
       tempUser.hates.push(props.id);
       if (tempUser.likes.includes(props.id)) {
@@ -105,7 +104,6 @@ const Post = (props) => {
   const timeNow = new Date().getTime();
 
   useEffect(() => {
-    
     Object.keys(props.allComments).forEach(key => {
       if (props.allComments[key].post === props.id) {
         setComments(prevState => ({
