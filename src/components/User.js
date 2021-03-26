@@ -94,10 +94,9 @@ const User = (props) => {
       </div>
     </div>
   );
-  
   // checks if user exists in DB
   firebase.firestore().collection('users').doc(name).get()
-  .then((doc) => {
+    .then((doc) => {
     setDoesUserExist(!!doc.data());
   });
 
@@ -121,7 +120,7 @@ const User = (props) => {
     });
     // Get user avatar
     firebase.firestore().collection('users').doc(name).get().then((doc) => {
-      if (doc.data().avatar) {
+      if (doc.data()) {
         setUserAvatar(doc.data().avatar);  
       };
     });
