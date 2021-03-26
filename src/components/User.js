@@ -3,24 +3,54 @@ import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
+import 'firebase/storage';
 import Post from './Post';
 import Comment from './Comment';
 import error from '../media/404.png';
+import defaultAvatar from '../media/default-avatar.png';
 
 const User = (props) => {
 
   const [doesUserExist, setDoesUserExist] = useState(true);
   const [userPosts, setUserPosts] = useState({});
   const [userComments, setUserComments] = useState({});
+  const [userAvatar, setUserAvatar] = useState(defaultAvatar);
   const [postPoints, setPostPoints] = useState(0);
   const [commentPoints, setCommentPoints] = useState(0);
+  const [warning, setWarning] = useState(null);
 
   const { name } = useParams();
+
+  const uploadAvatar = (e) => {
+    const file = e.target.files[0];
+    if (file.size < 2000000) {
+      setWarning(null);
+      const img = firebase.storage().ref().child(`avatars/${name}`);
+      // store it
+      img.put(file).then(() => {
+        img.getDownloadURL().then((url) => {
+          const tempUser = JSON.parse(JSON.stringify(props.userRef));
+          tempUser['avatar'] = url;
+          firebase.firestore().collection('users').doc(name).set(tempUser);
+          props.setUserRef(tempUser);
+          setUserAvatar(url);
+        });  
+      });
+    } else {
+      setWarning('Max file size is 2MB');
+    };
+  };
 
   const displayUser = (
     <div className='user-page'>
       <div className='user'>
-        <div className='image-placeholder'></div>
+        <img className='avatar' src={userAvatar} alt={name} />
+        <p className='warning'>{warning}</p>
+        {
+          props.userRef &&
+          props.userRef.displayName === name &&
+          <input onChange={uploadAvatar}type='file' />
+        }
         <p className='user-name'>{name}</p>
         <p className='post-points'>Post points: {postPoints}</p>
         <p className='comment-points'>Comment points: {commentPoints}</p>
@@ -89,6 +119,13 @@ const User = (props) => {
         tempCommentPoints += props.allComments[key].likes;
       };
     });
+    // Get user avatar
+    firebase.firestore().collection('users').doc(name).get().then((doc) => {
+      if (doc.data().avatar) {
+        setUserAvatar(doc.data().avatar);  
+      };
+    });
+    
     setUserPosts(tempPosts);
     setUserComments(tempComments);
     setPostPoints(tempPostPoints);
