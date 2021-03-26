@@ -120,7 +120,7 @@ const User = (props) => {
     });
     // Get user avatar
     firebase.firestore().collection('users').doc(name).get().then((doc) => {
-      if (doc.data()) {
+      if (doc.data().avatar) {
         setUserAvatar(doc.data().avatar);  
       };
     });
